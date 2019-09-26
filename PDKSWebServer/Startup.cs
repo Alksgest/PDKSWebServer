@@ -15,6 +15,8 @@ namespace PDKSWebServer
 {
     public class Startup
     {
+
+        private readonly string _url = "http://localhost:4200/";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -22,9 +24,12 @@ namespace PDKSWebServer
 
         public IConfiguration Configuration { get; }
 
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(c => c.AddPolicy("AllowAll", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+
             services.AddControllers();
         }
 
@@ -35,6 +40,10 @@ namespace PDKSWebServer
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            //app.UseCors(options => options.WithOrigins(_url).AllowAnyMethod());
+            //app.UseCors(options => options.AllowAnyOrigin());
+            app.UseCors("AllowAll");
 
             app.UseHttpsRedirection();
 

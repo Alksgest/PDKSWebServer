@@ -4,10 +4,10 @@ using PDKSWebServer.Models;
 
 namespace PDKSWebServer.DbContexts
 {
-    public class UserContext : DbContext
+    public class CategoryContext : DbContext
     {
         private readonly string _connectionString;
-        public UserContext() : base()
+        public CategoryContext() : base()
         {
             var builder = new ConfigurationBuilder();
             builder.AddJsonFile("appsettings.json", optional: false);
@@ -21,7 +21,6 @@ namespace PDKSWebServer.DbContexts
         {
             optionsBuilder.UseSqlServer(_connectionString);
         }
-
-        public DbSet<User> Users { get; set; }
+        public DbSet<Category> Categories { get; set; }
     }
 }

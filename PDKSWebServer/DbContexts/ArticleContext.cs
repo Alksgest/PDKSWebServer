@@ -4,10 +4,10 @@ using PDKSWebServer.Models;
 
 namespace PDKSWebServer.DbContexts
 {
-    public class UserContext : DbContext
+    public class ArticleContext : DbContext
     {
         private readonly string _connectionString;
-        public UserContext() : base()
+        public ArticleContext() : base()
         {
             var builder = new ConfigurationBuilder();
             builder.AddJsonFile("appsettings.json", optional: false);
@@ -22,6 +22,6 @@ namespace PDKSWebServer.DbContexts
             optionsBuilder.UseSqlServer(_connectionString);
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<Article> Articles { get; set; }
     }
 }

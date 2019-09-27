@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using PDKSWebServer.DbContexts;
 using PDKSWebServer.Models;
 
 namespace PDKSWebServer.Repositories
 {
     public class ArticleRepository : IArticleRepository
     {
+        private readonly ArticleContext _db = new ArticleContext();
         private readonly List<Article> Articles = new List<Article>()
         {
             new Article
@@ -91,11 +94,8 @@ namespace PDKSWebServer.Repositories
 
         public int AddArticle(Article article)
         {
-            int nextId = 1 + Articles.Max(art => art.ID);
-            article.ID = nextId;
-            Articles.Add(article);
-
-            return nextId;
+            var res = _db.Articles.Add(article);         
+            return res.Entity.ID;
         }
 
         public Article GetArticle(int id)
@@ -105,7 +105,9 @@ namespace PDKSWebServer.Repositories
 
         public IEnumerable<Article> GetArticles()
         {
-            return this.Articles;
+            return _db.Articles
+                .Include(article => article.Author)
+                .Include(article=> article.Categories);
         }
 
         public IEnumerable<Article> GetArticles(int categoryId)

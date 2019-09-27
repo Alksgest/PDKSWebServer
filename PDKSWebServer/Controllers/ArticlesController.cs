@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using PDKSWebServer.Dtos;
 using PDKSWebServer.Models;
 using PDKSWebServer.Repositories;
 
@@ -12,6 +15,7 @@ namespace PDKSWebServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowAll")]
     public class ArticlesController : ControllerBase
     {
         private readonly IArticleRepository _repo;
@@ -40,9 +44,11 @@ namespace PDKSWebServer.Controllers
         }
 
         [HttpPost]
-        public int PostArticle(Article article)
+        public dynamic PostArticle([FromBody]JsonElement article)
         {
-            return _repo.AddArticle(article);
+            var val = article.GetRawText();
+            ArticleDto art = JsonConvert.DeserializeObject<ArticleDto>(val);
+            return article;
         }
 
     }

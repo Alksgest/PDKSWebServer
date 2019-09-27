@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace PDKSWebServer.Models
+namespace PDKSWebServer.Dtos
 {
-    public class Category
+    public class UserDto
     {
         public int ID { get; set; }
-        public string Title { get; set; }
+        public string Username { get; set; }
+        public string Role { get; set; }
     }
 }

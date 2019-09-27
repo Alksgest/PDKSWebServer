@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PDKSWebServer.Models
@@ -6,10 +7,11 @@ namespace PDKSWebServer.Models
     public class Category
     {
         [Key]
-        public int ID { get; set; }
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int CategoryId { get; set; }
         [Required]
         [MaxLength(20)]
-        [Column("Title")]
         public string Title { get; set; }
+        //public virtual ICollection<ArticleCategory> Categories { get; set; }
     }
 }

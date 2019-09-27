@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PDKSWebServer.DbContexts;
 
-namespace PDKSWebServer.Migrations.Article
+namespace PDKSWebServer.Migrations
 {
-    [DbContext(typeof(ArticleContext))]
-    [Migration("20190927091204_AddedArticleContextMigration")]
-    partial class AddedArticleContextMigration
+    [DbContext(typeof(MainContext))]
+    partial class MainContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -23,92 +21,95 @@ namespace PDKSWebServer.Migrations.Article
 
             modelBuilder.Entity("PDKSWebServer.Models.Article", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("ArticleID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AuthorID")
+                    b.Property<int>("AuthorUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
 
-                    b.HasKey("ID");
+                    b.HasKey("ArticleID");
 
-                    b.HasIndex("AuthorID");
+                    b.HasIndex("AuthorUserId");
+
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Articles");
                 });
 
             modelBuilder.Entity("PDKSWebServer.Models.Category", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("ArticleID")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(20)")
+                        .HasMaxLength(20);
 
-                    b.HasKey("ID");
+                    b.HasKey("CategoryId");
 
-                    b.HasIndex("ArticleID");
-
-                    b.ToTable("Category");
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("PDKSWebServer.Models.User", b =>
                 {
-                    b.Property<int>("ID")
+                    b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnName("Password")
                         .HasColumnType("nvarchar(20)")
                         .HasMaxLength(20);
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnName("Role")
                         .HasColumnType("nvarchar(20)")
                         .HasMaxLength(20);
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnName("Username")
                         .HasColumnType("nvarchar(20)")
                         .HasMaxLength(20);
 
-                    b.HasKey("ID");
+                    b.HasKey("UserId");
 
-                    b.ToTable("User");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("PDKSWebServer.Models.Article", b =>
                 {
                     b.HasOne("PDKSWebServer.Models.User", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorID");
-                });
+                        .HasForeignKey("AuthorUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-            modelBuilder.Entity("PDKSWebServer.Models.Category", b =>
-                {
-                    b.HasOne("PDKSWebServer.Models.Article", null)
-                        .WithMany("Categories")
-                        .HasForeignKey("ArticleID");
+                    b.HasOne("PDKSWebServer.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

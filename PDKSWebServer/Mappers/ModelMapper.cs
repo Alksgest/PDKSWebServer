@@ -10,24 +10,6 @@ namespace PDKSWebServer.Mappers
 {
     internal class ModelMapper
     {
-        private class TicksToDateTimeConverter : ITypeConverter<long, DateTime>
-        {
-            public DateTime Convert(long source, DateTime destination, ResolutionContext context)
-            {
-                DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-                dtDateTime = dtDateTime.AddMilliseconds(source).ToLocalTime();
-                return dtDateTime;
-            }
-        }
-
-        private class DateTimeToTicksConverter : ITypeConverter<DateTime, long>
-        {
-            public long Convert(DateTime source, long destination, ResolutionContext context)
-            {
-                return new DateTimeOffset(source).ToUnixTimeMilliseconds();
-            }
-        }
-
         private static ModelMapper _modelMapper;
         internal static ModelMapper GetMapper =>
             _modelMapper ?? (_modelMapper = new ModelMapper());
@@ -42,11 +24,37 @@ namespace PDKSWebServer.Mappers
                 cfg.CreateMap<User, UserDto>();
                 cfg.CreateMap<UserDto, User>();
 
-                cfg.CreateMap<Article, ArticleDto>();
-                cfg.CreateMap<ArticleDto, Article>();
-
                 cfg.CreateMap<Category, CategoryDto>();
                 cfg.CreateMap<CategoryDto, Category>();
+
+                cfg.CreateMap<Article, ArticleDto>();
+                cfg.CreateMap<ArticleDto, Article>()
+                    .ForMember(m => m.Category, 
+                        opt => opt.MapFrom(x =>_mapper.Map<CategoryDto, Category>(x.Category)));
+
+                //cfg.CreateMap<Article, ArticleDto>()
+                //    .AfterMap((article, articleDto) =>
+                //    {
+                //        foreach (var ac in article.ArticleCategories)
+                //        {
+                //            articleDto.Categories.Add(Map<Category, CategoryDto>(ac.Category));
+                //        }
+                //    });
+
+                //cfg.CreateMap<ArticleDto, Article>()
+                //.AfterMap((dto, article) =>
+                //    {
+                //        foreach(var catDto in dto.Categories)
+                //        {
+                //            article.ArticleCategories.Add(new ArticleCategory
+                //            {
+                //                Article = article,
+                //                ArticleId = article.ArticleID,
+                //                Category = Map<CategoryDto, Category>(catDto),
+                //                CategoryId = catDto.CategoryId
+                //            });
+                //        }
+                //    });
             });
 
             _mapper = new Mapper(config);

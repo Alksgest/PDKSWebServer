@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -18,9 +19,14 @@ namespace PDKSWebServer
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+            //.ConfigureAppConfiguration((hostingContext, config) =>
+            //{
+            //config.SetBasePath(Directory.GetCurrentDirectory());
+            //config.AddJsonFile("appconfig", optional:false, reloadOnChange: false);
+            //})
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
     }
 }

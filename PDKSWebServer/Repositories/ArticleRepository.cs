@@ -8,7 +8,7 @@ namespace PDKSWebServer.Repositories
 {
     public class ArticleRepository : IArticleRepository
     {
-        private readonly IEnumerable<Article> Articles = new List<Article>()
+        private readonly List<Article> Articles = new List<Article>()
         {
             new Article
             {
@@ -21,11 +21,7 @@ namespace PDKSWebServer.Repositories
                     ID = 1,
                     Username = "alksgest",
                     Password = "1111",
-                    Role = new UserRole
-                    {
-                        ID = 1,
-                        Role = UserRole.RoleType.Admin
-                    }
+                    Role = "admin"
                 },
                 CreationDate = DateTime.Now,
                 Categories = new List<Category>
@@ -52,11 +48,12 @@ namespace PDKSWebServer.Repositories
                     ID = 1,
                     Username = "alksgest",
                     Password = "1111",
-                    Role = new UserRole
-                    {
-                        ID = 1,
-                        Role = UserRole.RoleType.Admin
-                    },
+                    Role = "admin"
+                    //Role = new UserRole
+                    //{
+                    //    ID = 1,
+                    //    Role = UserRole.RoleType.Admin
+                    //},
                 },
                 CreationDate = DateTime.Now,
                 Categories = new List<Category>
@@ -78,11 +75,7 @@ namespace PDKSWebServer.Repositories
                     ID = 1,
                     Username = "alksgest",
                     Password = "1111",
-                    Role = new UserRole
-                    {
-                        ID = 1,
-                        Role = UserRole.RoleType.Admin
-                    }
+                    Role = "admin"
                 },
                 CreationDate = DateTime.Now,
                 Categories = new List<Category>
@@ -100,7 +93,8 @@ namespace PDKSWebServer.Repositories
         {
             int nextId = 1 + Articles.Max(art => art.ID);
             article.ID = nextId;
-            Articles.ToList().Add(article);
+            Articles.Add(article);
+
             return nextId;
         }
 

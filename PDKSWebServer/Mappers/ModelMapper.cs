@@ -41,6 +41,12 @@ namespace PDKSWebServer.Mappers
 
                 cfg.CreateMap<User, UserDto>();
                 cfg.CreateMap<UserDto, User>();
+
+                cfg.CreateMap<Article, ArticleDto>();
+                cfg.CreateMap<ArticleDto, Article>();
+
+                cfg.CreateMap<Category, CategoryDto>();
+                cfg.CreateMap<CategoryDto, Category>();
             });
 
             _mapper = new Mapper(config);
@@ -53,7 +59,7 @@ namespace PDKSWebServer.Mappers
             return _mapper.Map<TSource, TDest>(source);
         }
 
-        internal List<TDest> MapList<TSource, TDest>(List<TSource> source)
+        internal IEnumerable<TDest> MapList<TSource, TDest>(IEnumerable<TSource> source)
         {
             if (source == null)
                 return null;

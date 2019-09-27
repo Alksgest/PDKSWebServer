@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using PDKSWebServer.Dtos;
+using PDKSWebServer.Managers;
 using PDKSWebServer.Models;
 using PDKSWebServer.Repositories;
 
@@ -18,37 +19,37 @@ namespace PDKSWebServer.Controllers
     [EnableCors("AllowAll")]
     public class ArticlesController : ControllerBase
     {
-        private readonly IArticleRepository _repo;
+        private readonly IArticlesManager _manager;
         public ArticlesController()
         {
-            _repo = new ArticleRepository();
+            _manager = new ArticlesManager();
         }
 
         [HttpGet]
-        public IEnumerable<Article> GetArticles()
+        public IEnumerable<ArticleDto> GetArticles()
         {
-            return _repo.GetArticles();
+            return _manager.GetArticles();
         }
 
         [HttpGet("category/{categoryId}")]
-        public IEnumerable<Article> GetArticles(int categoryId)
+        public IEnumerable<ArticleDto> GetArticles(int categoryId)
         {
-            var res = _repo.GetArticles(categoryId);
-            return res;
+            return _manager.GetArticles(categoryId); ;
         }
 
         [HttpGet("{id}")]
-        public Article GetArticle(int id)
+        public ArticleDto GetArticle(int id)
         {
-            return _repo.GetArticle(id);
+            return _manager.GetArticle(id);
         }
 
         [HttpPost]
-        public dynamic PostArticle([FromBody]JsonElement article)
+        public int PostArticle([FromBody]JsonElement article)
         {
             var val = article.GetRawText();
             ArticleDto art = JsonConvert.DeserializeObject<ArticleDto>(val);
-            return article;
+
+            return _manager.AddArticle(art);
         }
 
     }

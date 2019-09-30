@@ -8,8 +8,8 @@ namespace PDKSWebServer.Models
     public class Article
     {
         [Key]
-        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ArticleID { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ID { get; set; }
         [Required]
         [MaxLength(20)]
         public string Title { get; set; }

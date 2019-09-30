@@ -11,20 +11,20 @@ namespace PDKSWebServer.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    CategoryId = table.Column<int>(nullable: false)
+                    ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.CategoryId);
+                    table.PrimaryKey("PK_Categories", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(nullable: false)
+                    ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Username = table.Column<string>(maxLength: 20, nullable: false),
                     Password = table.Column<string>(maxLength: 20, nullable: false),
@@ -32,47 +32,47 @@ namespace PDKSWebServer.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.UserId);
+                    table.PrimaryKey("PK_Users", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Articles",
                 columns: table => new
                 {
-                    ArticleID = table.Column<int>(nullable: false)
+                    ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(maxLength: 20, nullable: false),
-                    AuthorUserId = table.Column<int>(nullable: false),
+                    AuthorID = table.Column<int>(nullable: false),
                     Content = table.Column<string>(nullable: false),
                     CreationDate = table.Column<DateTime>(nullable: false),
-                    CategoryId = table.Column<int>(nullable: false)
+                    CategoryID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Articles", x => x.ArticleID);
+                    table.PrimaryKey("PK_Articles", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Articles_Users_AuthorUserId",
-                        column: x => x.AuthorUserId,
+                        name: "FK_Articles_Users_AuthorID",
+                        column: x => x.AuthorID,
                         principalTable: "Users",
-                        principalColumn: "UserId",
+                        principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Articles_Categories_CategoryId",
-                        column: x => x.CategoryId,
+                        name: "FK_Articles_Categories_CategoryID",
+                        column: x => x.CategoryID,
                         principalTable: "Categories",
-                        principalColumn: "CategoryId",
+                        principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Articles_AuthorUserId",
+                name: "IX_Articles_AuthorID",
                 table: "Articles",
-                column: "AuthorUserId");
+                column: "AuthorID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Articles_CategoryId",
+                name: "IX_Articles_CategoryID",
                 table: "Articles",
-                column: "CategoryId");
+                column: "CategoryID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

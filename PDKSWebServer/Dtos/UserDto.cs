@@ -7,7 +7,7 @@ namespace PDKSWebServer.Dtos
 {
     public class UserDto
     {
-        public int UserId { get; set; }
+        public int ID { get; set; }
         public string Username { get; set; }
         public string Role { get; set; }
     }

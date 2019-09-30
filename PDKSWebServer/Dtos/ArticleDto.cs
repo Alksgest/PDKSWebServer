@@ -7,7 +7,7 @@ namespace PDKSWebServer.Dtos
 {
     public class ArticleDto
     {
-        public int ArticleId { get; set; }
+        public int ID { get; set; }
         public string Title { get; set; }
         public UserDto Author { get; set; }
         //public List<CategoryDto> Categories { get; set; } = new List<CategoryDto>();

@@ -7,8 +7,8 @@ namespace PDKSWebServer.Models
     public class Category
     {
         [Key]
-        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int CategoryId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ID { get; set; }
         [Required]
         [MaxLength(20)]
         public string Title { get; set; }

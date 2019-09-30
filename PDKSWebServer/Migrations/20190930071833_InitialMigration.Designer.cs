@@ -10,7 +10,7 @@ using PDKSWebServer.DbContexts;
 namespace PDKSWebServer.Migrations
 {
     [DbContext(typeof(MainContext))]
-    [Migration("20190927124249_InitialMigration")]
+    [Migration("20190930071833_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,15 +23,15 @@ namespace PDKSWebServer.Migrations
 
             modelBuilder.Entity("PDKSWebServer.Models.Article", b =>
                 {
-                    b.Property<int>("ArticleID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("AuthorUserId")
+                    b.Property<int>("AuthorID")
                         .HasColumnType("int");
 
-                    b.Property<int>("CategoryId")
+                    b.Property<int>("CategoryID")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -46,18 +46,18 @@ namespace PDKSWebServer.Migrations
                         .HasColumnType("nvarchar(20)")
                         .HasMaxLength(20);
 
-                    b.HasKey("ArticleID");
+                    b.HasKey("ID");
 
-                    b.HasIndex("AuthorUserId");
+                    b.HasIndex("AuthorID");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("CategoryID");
 
                     b.ToTable("Articles");
                 });
 
             modelBuilder.Entity("PDKSWebServer.Models.Category", b =>
                 {
-                    b.Property<int>("CategoryId")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -67,14 +67,14 @@ namespace PDKSWebServer.Migrations
                         .HasColumnType("nvarchar(20)")
                         .HasMaxLength(20);
 
-                    b.HasKey("CategoryId");
+                    b.HasKey("ID");
 
                     b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("PDKSWebServer.Models.User", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -94,7 +94,7 @@ namespace PDKSWebServer.Migrations
                         .HasColumnType("nvarchar(20)")
                         .HasMaxLength(20);
 
-                    b.HasKey("UserId");
+                    b.HasKey("ID");
 
                     b.ToTable("Users");
                 });
@@ -103,13 +103,13 @@ namespace PDKSWebServer.Migrations
                 {
                     b.HasOne("PDKSWebServer.Models.User", "Author")
                         .WithMany()
-                        .HasForeignKey("AuthorUserId")
+                        .HasForeignKey("AuthorID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("PDKSWebServer.Models.Category", "Category")
                         .WithMany()
-                        .HasForeignKey("CategoryId")
+                        .HasForeignKey("CategoryID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

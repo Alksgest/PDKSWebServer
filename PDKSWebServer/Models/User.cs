@@ -6,8 +6,8 @@ namespace PDKSWebServer.Models
     public class User
     {
         [Key]
-        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int UserId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ID { get; set; }
         [Required]
         [MaxLength(20)]
         public string Username { get; set; }

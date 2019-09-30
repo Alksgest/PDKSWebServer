@@ -8,8 +8,10 @@ using PDKSWebServer.Models;
 
 namespace PDKSWebServer.Repositories
 {
-    public class ArticleRepository : IArticleRepository
+    public class ArticleRepository : IArticleRepository, IDisposable
     {
+        private bool disposed = false;
+
         private readonly MainContext _db = new MainContext();
         //private readonly List<Article> Articles = new List<Article>()
         //{
@@ -40,62 +42,18 @@ namespace PDKSWebServer.Repositories
         //                Title = "Статті"
         //            }
         //        }
-        //    },
-        //    new Article
-        //    {
-        //        ArticleID = 2,
-        //        Title = "Незабудка 2",
-        //        Content = @"<div><p>NEW 222</p></div>",
-        //        Author = new User
-        //        {
-        //            UserId = 1,
-        //            Username = "alksgest",
-        //            Password = "1111",
-        //            Role = "admin"
-        //            //Role = new UserRole
-        //            //{
-        //            //    ID = 1,
-        //            //    Role = UserRole.RoleType.Admin
-        //            //},
-        //        },
-        //        CreationDate = DateTime.Now,
-        //        Categories = new List<Category>
-        //        {
-        //            new Category
-        //            {
-        //                CategoryId = 1,
-        //                Title = "Контакти"
-        //            },
-        //        }
-        //    },
-        //    new Article
-        //    {
-        //        ArticleID = 3,
-        //        Title = "Незабудка 3",
-        //        Content = @"<div><p>NEW 224</p></div>",
-        //        Author = new User
-        //        {
-        //            UserId = 1,
-        //            Username = "alksgest",
-        //            Password = "1111",
-        //            Role = "admin"
-        //        },
-        //        CreationDate = DateTime.Now,
-        //        Categories = new List<Category>
-        //        {
-        //            new Category
-        //            {
-        //                CategoryId = 5,
-        //                Title = "Статті"
-        //            }
-        //        }
         //    }
-        //};
+        //}
+    
 
         public int AddArticle(Article article)
         {
-            article.Author = _db.Users.Where(u => u.UserId == article.Author.UserId).FirstOrDefault();
-            article.Category = _db.Categories.Where(c => c.CategoryId == article.Category.CategoryId).FirstOrDefault();
+            article.Author = _db.Users
+                .FirstOrDefault(u => u.ID == article.Author.ID);
+
+            article.Category = _db.Categories
+                .FirstOrDefault(cat => cat.ID == article.Category.ID);
+
             _db.Articles.Add(article);
             var res = _db.SaveChanges();
             return res;
@@ -106,7 +64,7 @@ namespace PDKSWebServer.Repositories
             return _db.Articles
                 .Include(article => article.Author)
                 .Include(article => article.Category)
-                .SingleOrDefault(a => a.ArticleID == id);
+                .SingleOrDefault(a => a.ID == id);
             //return _db.Articles.Include(article => article.Author)
             //    .Include(article => article.ArticleCategories)
             //    .ThenInclude(ac => ac.Category)
@@ -140,12 +98,34 @@ namespace PDKSWebServer.Repositories
             //        }
             //    }
             //}
-            return null;
+            return _db.Articles
+                .Include(article => article.Author)
+                .Include(article => article.Category)
+                .Where(article => article.Category.ID == categoryId); 
         }
 
         public void UpdateArticle(Article article)
         {
 
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                _db.Dispose();
+            }
+
+            disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

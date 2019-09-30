@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PDKSWebServer.Dtos;
+using PDKSWebServer.Managers;
 
 namespace PDKSWebServer.Controllers
 {
@@ -11,10 +13,16 @@ namespace PDKSWebServer.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        [HttpGet]
-        public IEnumerable<string> GetCategories()
+        private readonly ICategoryManager _manager;
+
+        public CategoriesController()
         {
-            return Enumerable.Range(1, 5).Select(index => $"sus {index}");
+            _manager = new CategoryManager();
+        }
+        [HttpGet]
+        public IEnumerable<CategoryDto> GetCategories()
+        {
+            return _manager.GetCategories();
         }
     }
 }

@@ -9,6 +9,7 @@ namespace PDKSWebServer.DbContexts
         public DbSet<User> Users { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Article> Articles { get; set; }
+        public DbSet<AuthorizedUser> AuthorizedUsers { get; set; }
 
         private readonly string _connectionString;
         public MainContext() : base()
@@ -18,7 +19,7 @@ namespace PDKSWebServer.DbContexts
 
             var configuration = builder.Build();
 
-            _connectionString = configuration.GetConnectionString("SQLConnection").ToString();
+            _connectionString = configuration.GetConnectionString("SQLConnection");
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

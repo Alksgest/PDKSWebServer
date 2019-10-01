@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using PDKSWebServer.Dtos;
 using PDKSWebServer.Exceptions;
+using PDKSWebServer.Repositories;
 
 namespace PDKSWebServer.Managers
 {
@@ -11,6 +12,7 @@ namespace PDKSWebServer.Managers
         private readonly List<AuthToken> _tokens = new List<AuthToken>();
 
         private readonly IUserManager _userManager = new UserManager();
+        private readonly IAuthorizedUserRepository _repo = new AuthorizedUserRepository();
 
         public AuthToken Login(AccountCredenials credentials)
         {
@@ -21,6 +23,7 @@ namespace PDKSWebServer.Managers
                 _tokens.Remove(oldToken);
 
             //TODO: does not work correctly. need to be replaced with db access.
+            // user _repo here
             _tokens.Add(token);
 
             return token;

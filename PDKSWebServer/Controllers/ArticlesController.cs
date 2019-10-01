@@ -16,7 +16,7 @@ namespace PDKSWebServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [EnableCors("AllowAll")]
+    //[EnableCors("AllowAll")]
     public class ArticlesController : ControllerBase
     {
         private readonly IArticlesManager _manager;
@@ -26,15 +26,17 @@ namespace PDKSWebServer.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<ArticleDto> GetArticles()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<ArticleDto>> GetArticles()
         {
-            return _manager.GetArticles();
+            return Ok(_manager.GetArticles());
         }
 
         [HttpGet("category/{categoryId}")]
-        public IEnumerable<ArticleDto> GetArticles(int categoryId)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public ActionResult<IEnumerable<ArticleDto>> GetArticles(int categoryId)
         {
-            return _manager.GetArticles(categoryId); ;
+            return Ok(_manager.GetArticles(categoryId));
         }
 
         [HttpGet("{id}")]
@@ -44,7 +46,10 @@ namespace PDKSWebServer.Controllers
         }
 
         [HttpPost]
-        public int PostArticle([FromBody]JsonElement article)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public ActionResult<int> PostArticle([FromBody]JsonElement article)
         {
             var val = article.GetRawText();
             ArticleDto art = JsonConvert.DeserializeObject<ArticleDto>(val);

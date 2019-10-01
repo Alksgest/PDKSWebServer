@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PDKSWebServer.Models
@@ -7,15 +8,15 @@ namespace PDKSWebServer.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; }
+        public Int32 ID { get; set; }
         [Required]
         [MaxLength(20)]
-        public string Username { get; set; }
+        public String Username { get; set; }
         [Required]
         [MaxLength(20)]
-        public string Password { get; set; }
+        public String Password { get; set; }
         [Required]
         [MaxLength(20)]
-        public string Role { get; set; }
+        public String Role { get; set; }
     }
 }

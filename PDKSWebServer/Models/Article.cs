@@ -9,9 +9,9 @@ namespace PDKSWebServer.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ID { get; set; }
+        public int? ID { get; set; }
         [Required]
-        [MaxLength(20)]
+        [MaxLength(40)]
         public string Title { get; set; }
         [Required]
         public User Author { get; set; }

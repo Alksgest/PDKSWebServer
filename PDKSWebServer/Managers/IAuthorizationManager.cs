@@ -1,8 +1,5 @@
-﻿using PDKSWebServer.Dtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
+using PDKSWebServer.Dtos;
 
 namespace PDKSWebServer.Managers
 {
@@ -10,5 +7,7 @@ namespace PDKSWebServer.Managers
     {
         AuthToken Login(AccountCredenials credentials);
         Boolean Logout(AuthToken token);
+
+        void AllowAction(AuthToken token);
     }
 }

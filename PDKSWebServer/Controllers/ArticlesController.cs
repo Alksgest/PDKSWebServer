@@ -8,7 +8,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using PDKSWebServer.Dtos;
+using PDKSWebServer.Exceptions;
 using PDKSWebServer.Managers;
+using PDKSWebServer.Messages;
 using PDKSWebServer.Models;
 using PDKSWebServer.Repositories;
 
@@ -19,42 +21,54 @@ namespace PDKSWebServer.Controllers
     //[EnableCors("AllowAll")]
     public class ArticlesController : ControllerBase
     {
-        private readonly IArticlesManager _manager;
+        private readonly IArticlesManager _articlesManager;
+        private readonly IAuthorizationManager _authManager;
+
         public ArticlesController()
         {
-            _manager = new ArticlesManager();
+            _articlesManager = new ArticlesManager();
+            _authManager = new AuthorizationManager();
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<ArticleDto>> GetArticles()
         {
-            return Ok(_manager.GetArticles());
+            return Ok(_articlesManager.GetArticles());
         }
 
         [HttpGet("category/{categoryId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<ArticleDto>> GetArticles(int categoryId)
         {
-            return Ok(_manager.GetArticles(categoryId));
+            return Ok(_articlesManager.GetArticles(categoryId));
         }
 
         [HttpGet("{id}")]
         public ArticleDto GetArticle(int id)
         {
-            return _manager.GetArticle(id);
+            return _articlesManager.GetArticle(id);
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public ActionResult<int> PostArticle([FromBody]JsonElement article)
+        public ActionResult<int> PostArticle([FromBody]JsonElement request)
         {
-            var val = article.GetRawText();
-            ArticleDto art = JsonConvert.DeserializeObject<ArticleDto>(val);
+            var req = request.GetRawText();
+            CreateArticleRequestMessage msg = JsonConvert.DeserializeObject<CreateArticleRequestMessage>(req);
 
-            return _manager.AddArticle(art);
+            try
+            {
+                _authManager.AllowAction(msg.Token);                      
+
+                return _articlesManager.AddArticle(msg.Article);
+            }
+            catch(DoesNotHavePermissionsException)
+            {
+                return new BadRequestResult();
+            }
         }
 
     }

@@ -4,20 +4,20 @@ namespace PDKSWebServer.Dtos
 {
     public class AuthToken
     {
-        public UserDto Body { get; set; }
+        public UserDto User { get; set; }
         public DateTime ExpirationTime { get; set; }
         public bool IsAdmin { get; set; }
 
         public override Boolean Equals(Object obj)
         {
             return obj is AuthToken token &&
-                   Body == token.Body &&
+                   User == token.User &&
                    ExpirationTime == token.ExpirationTime;
         }
 
         public override Int32 GetHashCode()
         {
-            return HashCode.Combine(Body, ExpirationTime, IsAdmin) * -23 / 18;
+            return HashCode.Combine(User, ExpirationTime, IsAdmin) * -23 / 18;
         }
     }
 }

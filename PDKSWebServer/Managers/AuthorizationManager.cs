@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using PDKSWebServer.Dtos;
+using PDKSWebServer.Exceptions;
 
 namespace PDKSWebServer.Managers
 {
@@ -15,6 +15,12 @@ namespace PDKSWebServer.Managers
         public AuthToken Login(AccountCredenials credentials)
         {
             var token = GenerateToken(credentials);
+
+            var oldToken = _tokens.SingleOrDefault(t => t.User.Username == credentials.Username);
+            if (oldToken != null)
+                _tokens.Remove(oldToken);
+
+            //TODO: does not work correctly. need to be replaced with db access.
             _tokens.Add(token);
 
             return token;
@@ -27,8 +33,16 @@ namespace PDKSWebServer.Managers
 
         public void RenewToken(AccountCredenials credentials)
         {
-            var token = _tokens.SingleOrDefault(token => token.Body.Username == credentials.Username);
+            var token = _tokens.SingleOrDefault(token => token.User.Username == credentials.Username);
             token.ExpirationTime = DateTime.Now.AddHours(2);
+        }
+
+        public void AllowAction(AuthToken token)
+        {
+            var existingToken = _tokens.SingleOrDefault(t => t.User.Username == token.User.Username);
+
+            if(!(existingToken?.GetHashCode() == token?.GetHashCode() && existingToken.IsAdmin))           
+                throw new DoesNotHavePermissionsException();        
         }
 
 
@@ -39,7 +53,7 @@ namespace PDKSWebServer.Managers
             var token = new AuthToken
             {
                 ExpirationTime = DateTime.Now.AddHours(2),
-                Body = UserDto,
+                User = UserDto,
                 IsAdmin = UserDto.Role == "admin"
             };
 

@@ -27,6 +27,7 @@ namespace PDKSWebServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors(c => c.AddPolicy("AllowAll", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
+            //services.AddSession();
             services.AddControllers();
 
             //string connectionString = Configuration.GetConnectionString("SQLConnection");
@@ -50,6 +51,8 @@ namespace PDKSWebServer
             app.UseRouting();
 
             app.UseAuthorization();
+
+            //app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {

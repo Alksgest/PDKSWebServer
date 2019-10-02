@@ -30,9 +30,10 @@ namespace PDKSWebServer.Repositories
             return res;
         }
 
-        public Article GetArticle(int id)
+        public Article GetArticle(int id, User.UserRole role)
         {
             return _db.Articles
+                .Where(a => (int)a.AccessLevel >= (int)role)
                 .Include(article => article.Author)
                 .Include(article => article.Category)
                 .SingleOrDefault(a => a.ID == id);
@@ -43,7 +44,7 @@ namespace PDKSWebServer.Repositories
             //return this.Articles.SingleOrDefault(a => a.ArticleID == id);
         }
 
-        public IEnumerable<Article> GetArticles()
+        public IEnumerable<Article> GetArticles(User.UserRole role)
         {
             //var articles = _db.Articles
             //    .Include(article => article.Author)
@@ -51,11 +52,12 @@ namespace PDKSWebServer.Repositories
             //    .ThenInclude(ac => ac.Category);
             //return articles;
             return _db.Articles
+                .Where(a => (int)a.AccessLevel >= (int)role)
                 .Include(article => article.Author)
                 .Include(article => article.Category);
         }
 
-        public IEnumerable<Article> GetArticles(int categoryId)
+        public IEnumerable<Article> GetArticles(int categoryId, User.UserRole role)
         {
             //var result = new List<Article>();
             //foreach(var art in this.Articles)

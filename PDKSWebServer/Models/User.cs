@@ -8,7 +8,7 @@ namespace PDKSWebServer.Models
     {
         public enum UserRole
         {
-            FirstDegree = 0, SecondDegree, ThirdDegree, Admin
+            NotAuthorized = 0, FirstDegree, SecondDegree, ThirdDegree, Admin
         }
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

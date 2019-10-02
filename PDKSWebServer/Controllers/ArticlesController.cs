@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -34,20 +35,31 @@ namespace PDKSWebServer.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<ArticleDto>> GetArticles()
         {
+            var h = HttpContext.Request.Path;
+
+            var json = this.Request.Query["token"];
+            if (!String.IsNullOrEmpty(json))
+            {
+                var token = JsonConvert.DeserializeObject<AuthToken>(json);
+            }
+
+            //var role = token == null ? Models.User.UserRole.NotAuthorized : token.User.Role;
             return Ok(_articlesManager.GetArticles());
         }
 
         [HttpGet("category/{categoryId}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<ArticleDto>> GetArticles(int categoryId)
+        public ActionResult<IEnumerable<ArticleDto>> GetArticles(int categoryId, AuthToken token = null)
         {
-            return Ok(_articlesManager.GetArticles(categoryId));
+            var role = token == null ? Models.User.UserRole.NotAuthorized : token.User.Role;
+            return Ok(_articlesManager.GetArticles(categoryId, role));
         }
 
         [HttpGet("{id}")]
-        public ArticleDto GetArticle(int id)
+        public ArticleDto GetArticle(int id, AuthToken token = null)
         {
-            return _articlesManager.GetArticle(id);
+            var role = token == null ? Models.User.UserRole.NotAuthorized : token.User.Role;
+            return _articlesManager.GetArticle(id, role);
         }
 
         [HttpPost]

@@ -1,4 +1,5 @@
 ﻿using PDKSWebServer.Dtos;
+using PDKSWebServer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +11,11 @@ namespace PDKSWebServer.Managers
     {
         public int AddArticle(ArticleDto article);
 
-        public ArticleDto GetArticle(int id);
+        public ArticleDto GetArticle(int id, User.UserRole role = User.UserRole.NotAuthorized);
 
-        public IEnumerable<ArticleDto> GetArticles();
+        public IEnumerable<ArticleDto> GetArticles(User.UserRole role = User.UserRole.NotAuthorized);
 
-        public IEnumerable<ArticleDto> GetArticles(int categoryId);
+        public IEnumerable<ArticleDto> GetArticles(int categoryId, User.UserRole role = User.UserRole.NotAuthorized);
 
         public void UpdateArticle(ArticleDto article);
     }

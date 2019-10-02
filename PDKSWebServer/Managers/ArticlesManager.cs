@@ -26,19 +26,19 @@ namespace PDKSWebServer.Managers
             return _repository.AddArticle(art);
         }
 
-        public ArticleDto GetArticle(int id)
+        public ArticleDto GetArticle(int id, User.UserRole role = User.UserRole.NotAuthorized)
         {
-            return _mapper.Map<Article, ArticleDto>(_repository.GetArticle(id));
+            return _mapper.Map<Article, ArticleDto>(_repository.GetArticle(id, role));
         }
 
-        public IEnumerable<ArticleDto> GetArticles()
+        public IEnumerable<ArticleDto> GetArticles(User.UserRole role = User.UserRole.NotAuthorized)
         {
-            return _mapper.MapList<Article, ArticleDto>(_repository.GetArticles());
+            return _mapper.MapList<Article, ArticleDto>(_repository.GetArticles(role));
         }
 
-        public IEnumerable<ArticleDto> GetArticles(int categoryId)
+        public IEnumerable<ArticleDto> GetArticles(int categoryId, User.UserRole role = User.UserRole.NotAuthorized)
         {
-            return _mapper.MapList<Article, ArticleDto>(_repository.GetArticles(categoryId));
+            return _mapper.MapList<Article, ArticleDto>(_repository.GetArticles(categoryId, role));
         }
 
         public void UpdateArticle(ArticleDto article)

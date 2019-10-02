@@ -23,6 +23,9 @@ namespace PDKSWebServer.Models
         [Required]
         public Category Category { get; set; }
 
+        [Required]
+        public User.UserRole AccessLevel { get; set; }
+
         //public virtual ICollection<ArticleCategory> ArticleCategories { get; set; } = new List<ArticleCategory>();
     }
 }

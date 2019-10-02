@@ -21,6 +21,7 @@ namespace PDKSWebServer.Controllers
         private readonly IAuthorizationManager _manager = new AuthorizationManager();
 
         [HttpPost("login")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<AuthToken> Login([FromBody]JsonElement credentials) //
         {
@@ -29,15 +30,16 @@ namespace PDKSWebServer.Controllers
             try
             {
                 var token = _manager.Login(cre);
-                return token;
+                return Ok(token);
             }
-            catch (UserDoesNotExistException)
+            catch (UserDoesNotExistException e)
             {
-                return new BadRequestResult();
+                return BadRequest(e.Message);
             }
         }
 
         [HttpPost("logout")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult Logout(AuthToken token)
         {
             //TODO: add some false check?

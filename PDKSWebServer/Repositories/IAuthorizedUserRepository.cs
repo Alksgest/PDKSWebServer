@@ -11,5 +11,6 @@ namespace PDKSWebServer.Repositories
         int AddUser(AuthorizedUser user);
         void RemoveUser(AuthorizedUser user);
         AuthorizedUser GetUser(string username);
+        AuthorizedUser UpdateUser(AuthorizedUser user);
     }
 }

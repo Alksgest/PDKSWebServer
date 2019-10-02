@@ -65,9 +65,13 @@ namespace PDKSWebServer.Controllers
 
                 return _articlesManager.AddArticle(msg.Article);
             }
-            catch(DoesNotHavePermissionsException)
+            catch(DoesNotHavePermissionsException e)
             {
-                return new BadRequestResult();
+                return BadRequest(e.Message);
+            }
+            catch(AuthorizationIsNeededException e)
+            {
+                return Unauthorized(e.Message);
             }
         }
 

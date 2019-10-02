@@ -6,7 +6,6 @@ namespace PDKSWebServer.Dtos
     {
         public UserDto User { get; set; }
         public DateTime ExpirationTime { get; set; }
-        public bool IsAdmin { get; set; }
 
         public override Boolean Equals(Object obj)
         {
@@ -17,7 +16,7 @@ namespace PDKSWebServer.Dtos
 
         public override Int32 GetHashCode()
         {
-            return HashCode.Combine(User, ExpirationTime, IsAdmin) * -23 / 18;
+            return HashCode.Combine(User, ExpirationTime) * -23 / 18;
         }
     }
 }

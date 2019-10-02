@@ -75,7 +75,7 @@ namespace PDKSWebServer.Managers
         {
             var existingToken = GenerateExitingToken(token);
 
-            if (!(existingToken?.GetHashCode() == token?.GetHashCode() && existingToken.IsAdmin))
+            if (!(existingToken?.GetHashCode() == token?.GetHashCode() && existingToken.User.Role != User.UserRole.Admin))
                 throw new DoesNotHavePermissionsException();
 
             if (DateTime.Now >= token.ExpirationTime)
@@ -92,7 +92,6 @@ namespace PDKSWebServer.Managers
             {
                 User = dto,
                 ExpirationTime = token.ExpirationTime,
-                IsAdmin = dto.Role == "admin"
             };
 
             return existingToken;
@@ -106,7 +105,6 @@ namespace PDKSWebServer.Managers
             {
                 ExpirationTime = DateTime.Now.AddHours(2),
                 User = UserDto,
-                IsAdmin = UserDto.Role == "admin"
             };
 
             return token;

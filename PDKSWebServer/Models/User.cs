@@ -6,6 +6,10 @@ namespace PDKSWebServer.Models
 {
     public class User
     {
+        public enum UserRole
+        {
+            FirstDegree = 0, SecondDegree, ThirdDegree, Admin
+        }
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Int32 ID { get; set; }
@@ -17,6 +21,6 @@ namespace PDKSWebServer.Models
         public String Password { get; set; }
         [Required]
         [MaxLength(20)]
-        public String Role { get; set; }
+        public UserRole Role { get; set; }
     }
 }

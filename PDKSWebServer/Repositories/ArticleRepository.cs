@@ -45,6 +45,7 @@ namespace PDKSWebServer.Repositories
                 .Include(article => article.Author)
                 .Include(article => article.Category)
                 .Where(article => article.Category.ID == categoryId || categoryId == 0)
+                .Skip(0)
                 .Take(limit.GetValueOrDefault() == 0 ? 10 : limit.GetValueOrDefault());
         }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using PDKSWebServer.Dtos;
 using PDKSWebServer.Mappers;
 using PDKSWebServer.Models;
@@ -17,6 +18,13 @@ namespace PDKSWebServer.Managers
         {
             _repository = new CategoryRepository();
         }
+
+        public ActionResult<Int32> AddCategory(CategoryDto category)
+        {
+            var cat = ModelMapper.GetMapper.Map<CategoryDto, Category>(category);
+            return _repository.AddCategory(cat);
+        }
+
         public IEnumerable<CategoryDto> GetCategories()
         {
             return ModelMapper.GetMapper.MapList<Category, CategoryDto>(_repository.GetCategories());

@@ -19,6 +19,8 @@ namespace PDKSWebServer.Models
         [Required]
         [MaxLength(20)]
         public String Password { get; set; }
+        public String Firstname { get; set; }
+        public String Surname { get; set; }
         [Required]
         [MaxLength(20)]
         public UserRole Role { get; set; }

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using PDKSWebServer.Dtos;
 using PDKSWebServer.Managers;
 
@@ -30,6 +32,18 @@ namespace PDKSWebServer.Controllers
         public CategoryDto GetCategory(int id)
         {
             return _manager.GetCategory(id);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public ActionResult<int> PostCategory([FromBody]JsonElement request)
+        {
+            var req = request.GetRawText();
+            CategoryDto category = JsonConvert.DeserializeObject<CategoryDto>(req);
+
+            return Created("", _manager.AddCategory(category));
         }
     }
 }

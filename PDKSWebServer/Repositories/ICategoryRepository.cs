@@ -10,6 +10,6 @@ namespace PDKSWebServer.Repositories
     {
         IEnumerable<Category> GetCategories();
         Category GetCategory(int id);
-        void AddCategory(Category category);
+        Int32 AddCategory(Category category);
     }
 }

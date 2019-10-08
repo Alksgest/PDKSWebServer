@@ -1,54 +1,181 @@
 swagger: '2.0'
 info:
   version: 4.1.12-02-SNAPSHOT
-  title: Test contract
-  description: Test Contract
+  title: Contract
+  description: Articles contract
 host: 'localhost:44387'
 basePath: /api
 produces:
   - application/json
   
 definitions:
-    Category:
-        type: "object"
-        properties:
-            id:
-                type: "integer"
-                format: "int64"
-            title:
-                type: "string"
-        required:
-          - id
-          - title
-        
-        example:
-          id: 1
-          title: 'sus'
-              
+  Category:
+    type: "object"
+    properties:
+        id:
+            type: "integer"
+            format: "int64"
+        title:
+            type: "string"
+            format: string
+    required:
+      - id
+      - title    
+    example:
+      id: 1
+      title: 'sus'
+
+  User:
+    type: object
+    properties:
+      id: 
+        type: integer
+        format: int64
+      username: 
+        type: string
+        format: string
+      firstname: 
+        type: string
+        format: string
+      surname: 
+        type: string
+        format: string
+        description: surname
+      userRole:
+        $ref: '#/definitions/UserRole'
+        description: enum, which describe role of the user
+    required:
+      - id
+      - username
+      - firstname
+      - surname
+      - userRole 
+
+  Article:
+    type: object
+    properties: 
+      id: 
+        type: integer
+        format: int32
+      title:
+        type: "string"
+      user:
+        $ref: '#/definitions/User'
+      category: 
+        $ref: '#/definitions/Category'
+      content: 
+        type: string
+      creationDate: 
+        type: string
+        format: date-time
+    required:
+      - id
+      - title
+      - user
+      - category
+      - content
+      - creationDate
+
+  UserRole:
+    type: integer
+    enum:
+      - 0
+      - 1
+      - 2 
+      - 3
+      - 4
+    x-enumNames:
+      - NotAuthorized
+      - First
+      - Second
+      - Third
+      - Admin
+
+
+tags:
+  - name: category
+    description: categories service
+  - name: article 
+    description: articles service
+  - name: user
+    description: users service 
 
 paths:
   /categories:
     get:
+      tags:
+        - category
       summary: categories
       responses:
         '200':
-          description: categories.
+          description: get all categiries
           schema: 
             $ref: '#/definitions/Category'
-            example: 
-              id: 1
-              title: sus
+            # example: 
+            #   id: 1
+            #   title: sus
+    post:
+      tags:
+        - category
+      summary: add new category
+      consumes: 
+        - application/json
+      parameters:
+        - in: body
+          name: category
+          description: create Category
+          schema:
+            type: object
+            required:
+              # - id
+              - title
+            properties: 
+              # id: 
+              #   type: integer
+              #   format: int64
+              title: 
+                type: string
+                format: string
+      responses:
+        '201':
+          description: category`ve been created
+      deprecated: false
+    
   /categories/{id}:
     get:
-      summary: category
+      tags:
+        - category
+      summary: get category by id
       parameters:
         - name: id
           in: path
-          description: category id
+          description: get category by id
           required: true
           type: integer
       responses:
         '200':
-          description: category
+          description: succsess
           schema:
             $ref: '#/definitions/Category'
+  /users:
+    get:
+      tags:
+        - user
+      summary: get all users
+      responses:
+        '200':
+          description: succsess
+          schema:
+            $ref: '#/definitions/User'
+        '403':
+          description: does not created yeat
+  /articles:
+    get:
+      tags:
+        - article
+      summary: get articles
+      responses:
+        '200':
+          description: articles
+          
+

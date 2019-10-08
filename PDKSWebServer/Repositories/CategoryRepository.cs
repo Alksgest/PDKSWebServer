@@ -14,9 +14,10 @@ namespace PDKSWebServer.Repositories
 
         private readonly MainContext _db = new MainContext();
 
-        public void AddCategory(Category category)
+        public Int32 AddCategory(Category category)
         {
-            throw new NotImplementedException();
+            _db.Categories.Add(category);
+            return _db.SaveChanges();
         }
 
         public IEnumerable<Category> GetCategories()
@@ -24,7 +25,7 @@ namespace PDKSWebServer.Repositories
             return _db.Categories;
         }
 
-        public Category GetCategory(int id)
+        public Category GetCategory(Int32 id)
         {
             return _db.Categories.SingleOrDefault(cat => cat.ID == id);
         }

@@ -6,5 +6,6 @@ namespace PDKSWebServer.Managers
     interface ICategoryManager
     {
         IEnumerable<CategoryDto> GetCategories();
+        CategoryDto GetCategory(int id);
     }
 }

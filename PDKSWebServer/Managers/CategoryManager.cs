@@ -21,5 +21,10 @@ namespace PDKSWebServer.Managers
         {
             return ModelMapper.GetMapper.MapList<Category, CategoryDto>(_repository.GetCategories());
         }
+
+        public CategoryDto GetCategory(int id)
+        {
+            return ModelMapper.GetMapper.Map<Category, CategoryDto>(_repository.GetCategory(id));
+        }
     }
 }

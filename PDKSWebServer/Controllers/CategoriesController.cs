@@ -19,10 +19,17 @@ namespace PDKSWebServer.Controllers
         {
             _manager = new CategoryManager();
         }
+
         [HttpGet]
         public IEnumerable<CategoryDto> GetCategories()
         {
             return _manager.GetCategories();
+        }
+
+        [HttpGet("{id}")]
+        public CategoryDto GetCategory(int id)
+        {
+            return _manager.GetCategory(id);
         }
     }
 }

@@ -1,0 +1,54 @@
+swagger: '2.0'
+info:
+  version: 4.1.12-02-SNAPSHOT
+  title: Test contract
+  description: Test Contract
+host: 'localhost:44387'
+basePath: /api
+produces:
+  - application/json
+  
+definitions:
+    Category:
+        type: "object"
+        properties:
+            id:
+                type: "integer"
+                format: "int64"
+            title:
+                type: "string"
+        required:
+          - id
+          - title
+        
+        example:
+          id: 1
+          title: 'sus'
+              
+
+paths:
+  /categories:
+    get:
+      summary: categories
+      responses:
+        '200':
+          description: categories.
+          schema: 
+            $ref: '#/definitions/Category'
+            example: 
+              id: 1
+              title: sus
+  /categories/{id}:
+    get:
+      summary: category
+      parameters:
+        - name: id
+          in: path
+          description: category id
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: category
+          schema:
+            $ref: '#/definitions/Category'

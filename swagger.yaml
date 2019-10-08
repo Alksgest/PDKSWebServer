@@ -8,90 +8,6 @@ basePath: /api
 produces:
   - application/json
   
-definitions:
-  Category:
-    type: "object"
-    properties:
-        id:
-            type: "integer"
-            format: "int64"
-        title:
-            type: "string"
-            format: string
-    required:
-      - id
-      - title    
-    example:
-      id: 1
-      title: 'sus'
-
-  User:
-    type: object
-    properties:
-      id: 
-        type: integer
-        format: int64
-      username: 
-        type: string
-        format: string
-      firstname: 
-        type: string
-        format: string
-      surname: 
-        type: string
-        format: string
-        description: surname
-      userRole:
-        $ref: '#/definitions/UserRole'
-        description: enum, which describe role of the user
-    required:
-      - id
-      - username
-      - firstname
-      - surname
-      - userRole 
-
-  Article:
-    type: object
-    properties: 
-      id: 
-        type: integer
-        format: int32
-      title:
-        type: "string"
-      user:
-        $ref: '#/definitions/User'
-      category: 
-        $ref: '#/definitions/Category'
-      content: 
-        type: string
-      creationDate: 
-        type: string
-        format: date-time
-    required:
-      - id
-      - title
-      - user
-      - category
-      - content
-      - creationDate
-
-  UserRole:
-    type: integer
-    enum:
-      - 0
-      - 1
-      - 2 
-      - 3
-      - 4
-    x-enumNames:
-      - NotAuthorized
-      - First
-      - Second
-      - Third
-      - Admin
-
-
 tags:
   - name: category
     description: categories service
@@ -174,8 +90,111 @@ paths:
       tags:
         - article
       summary: get articles
+      parameters:
+        - in: query
+          name: category
+          description: get articles by category
+          type: integer
+          format: int32
+          required: false
+          minimum: 1
+        - in: query
+          name: limit
+          description: maximum number of records to return
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 50
       responses:
         '200':
-          description: articles
+          description: articles mathching criteria
+          schema:
+            type: array
+            items: 
+              $ref: '#/definitions/User'
+        '400':
+          description: bad input parametr
           
 
+definitions:
+  Category:
+    type: "object"
+    properties:
+        id:
+            type: "integer"
+            format: "int64"
+        title:
+            type: "string"
+            format: string
+    required:
+      - id
+      - title    
+    example:
+      id: 1
+      title: 'sus'
+
+  User:
+    type: object
+    properties:
+      id: 
+        type: integer
+        format: int64
+      username: 
+        type: string
+        format: string
+      firstname: 
+        type: string
+        format: string
+      surname: 
+        type: string
+        format: string
+        description: surname
+      userRole:
+        $ref: '#/definitions/UserRole'
+        description: enum, which describe role of the user
+    required:
+      - id
+      - username
+      - firstname
+      - surname
+      - userRole 
+
+  Article:
+    type: object
+    properties: 
+      id: 
+        type: integer
+        format: int32
+      title:
+        type: "string"
+      user:
+        $ref: '#/definitions/User'
+      category: 
+        $ref: '#/definitions/Category'
+      content: 
+        type: string
+      creationDate: 
+        type: string
+        format: date-time
+    required:
+      - id
+      - title
+      - user
+      - category
+      - content
+      - creationDate
+
+  UserRole:
+    type: integer
+    enum:
+      - 0
+      - 1
+      - 2 
+      - 3
+      - 4
+    x-enumNames:
+      - NotAuthorized
+      - First
+      - Second
+      - Third
+      - Admin

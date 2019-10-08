@@ -37,44 +37,15 @@ namespace PDKSWebServer.Repositories
                 .Include(article => article.Author)
                 .Include(article => article.Category)
                 .SingleOrDefault(a => a.ID == id);
-            //return _db.Articles.Include(article => article.Author)
-            //    .Include(article => article.ArticleCategories)
-            //    .ThenInclude(ac => ac.Category)
-            //    .SingleOrDefault(a => a.ArticleID == id);
-            //return this.Articles.SingleOrDefault(a => a.ArticleID == id);
         }
 
-        public IEnumerable<Article> GetArticles(User.UserRole role)
+        public IEnumerable<Article> GetArticles(int? categoryId, int? limit,  User.UserRole? role)
         {
-            //var articles = _db.Articles
-            //    .Include(article => article.Author)
-            //    .Include(article => article.ArticleCategories)
-            //    .ThenInclude(ac => ac.Category);
-            //return articles;
-            return _db.Articles
-                .Where(a => (int)a.AccessLevel >= (int)role)
-                .Include(article => article.Author)
-                .Include(article => article.Category);
-        }
-
-        public IEnumerable<Article> GetArticles(int categoryId, User.UserRole role)
-        {
-            //var result = new List<Article>();
-            //foreach(var art in this.Articles)
-            //{
-            //    foreach(var cat in art.Categories)
-            //    {
-            //        if(cat.CategoryId == categoryId)
-            //        {
-            //            result.Add(art);
-            //            break;
-            //        }
-            //    }
-            //}
             return _db.Articles
                 .Include(article => article.Author)
                 .Include(article => article.Category)
-                .Where(article => article.Category.ID == categoryId); 
+                .Where(article => article.Category.ID == categoryId || categoryId == 0)
+                .Take(limit.GetValueOrDefault() == 0 ? 10 : limit.GetValueOrDefault());
         }
 
         public void UpdateArticle(Article article)

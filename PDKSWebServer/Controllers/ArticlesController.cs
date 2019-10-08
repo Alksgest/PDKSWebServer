@@ -35,25 +35,28 @@ namespace PDKSWebServer.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<ArticleDto>> GetArticles()
         {
-            var h = HttpContext.Request.Path;
+            //var h = HttpContext.Request.Path;
 
-            var json = this.Request.Query["token"];
-            if (!String.IsNullOrEmpty(json))
-            {
-                var token = JsonConvert.DeserializeObject<AuthToken>(json);
-            }
-
+            //var json = this.Request.Query["token"];
+            //if (!String.IsNullOrEmpty(json))
+            //{
+            //    var token = JsonConvert.DeserializeObject<AuthToken>(json);
+            //}
             //var role = token == null ? Models.User.UserRole.NotAuthorized : token.User.Role;
-            return Ok(_articlesManager.GetArticles());
+
+            Int32.TryParse(this.Request.Query["category"].ToString(), out Int32 categoryId);
+            Int32.TryParse(this.Request.Query["limit"].ToString(), out Int32 limit);
+
+            return Ok(_articlesManager.GetArticles(categoryId, limit));
         }
 
-        [HttpGet("category/{categoryId}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult<IEnumerable<ArticleDto>> GetArticles(int categoryId, AuthToken token = null)
-        {
-            var role = token == null ? Models.User.UserRole.NotAuthorized : token.User.Role;
-            return Ok(_articlesManager.GetArticles(categoryId, role));
-        }
+        //[HttpGet("category/{categoryId}")]
+        //[ProducesResponseType(StatusCodes.Status200OK)]
+        //public ActionResult<IEnumerable<ArticleDto>> GetArticles(int categoryId, AuthToken token = null)
+        //{
+        //    var role = token == null ? Models.User.UserRole.NotAuthorized : token.User.Role;
+        //    return Ok(_articlesManager.GetArticles(categoryId, role));
+        //}
 
         [HttpGet("{id}")]
         public ArticleDto GetArticle(int id, AuthToken token = null)

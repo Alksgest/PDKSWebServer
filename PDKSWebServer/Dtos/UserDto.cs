@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using static PDKSWebServer.Models.User;
+using PDKSWebServer.Models;
 
 namespace PDKSWebServer.Dtos
 {
@@ -12,7 +10,7 @@ namespace PDKSWebServer.Dtos
         public string Username { get; set; }
         public String Firstname { get; set; }
         public String Surname { get; set; }
-        public UserRole Role { get; set; }
+        public UserRole? Role { get; set; }
 
         public override Boolean Equals(Object obj)
         {

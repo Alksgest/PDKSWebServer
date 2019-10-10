@@ -11,9 +11,9 @@ namespace PDKSWebServer.Managers
     {
         public int AddArticle(ArticleDto article);
 
-        public ArticleDto GetArticle(int id, User.UserRole role = User.UserRole.NotAuthorized);
+        public ArticleDto GetArticle(int id, UserRole? role);
 
-        public IEnumerable<ArticleDto> GetArticles(int? categoryId, int? limit, User.UserRole role = User.UserRole.NotAuthorized);
+        public IEnumerable<ArticleDto> GetArticles(int? categoryId, int? limit, UserRole? role);
 
         public void UpdateArticle(ArticleDto article);
     }

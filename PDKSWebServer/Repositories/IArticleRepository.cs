@@ -8,8 +8,8 @@ namespace PDKSWebServer.Repositories
 {
     interface IArticleRepository
     {
-        IEnumerable<Article> GetArticles(int? categoryId, int? limit, User.UserRole? role);
-        Article GetArticle(int id, User.UserRole role);
+        IEnumerable<Article> GetArticles(int? categoryId, int? limit, UserRole? role);
+        Article GetArticle(int id, UserRole? role);
         int AddArticle(Article article);
         void UpdateArticle(Article article);
     }

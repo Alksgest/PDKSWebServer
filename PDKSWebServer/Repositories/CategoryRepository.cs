@@ -27,7 +27,7 @@ namespace PDKSWebServer.Repositories
 
         public Category GetCategory(Int32 id)
         {
-            return _db.Categories.SingleOrDefault(cat => cat.ID == id);
+            return _db.Categories.SingleOrDefault(cat => cat.Id == id);
         }
 
         protected virtual void Dispose(bool disposing)

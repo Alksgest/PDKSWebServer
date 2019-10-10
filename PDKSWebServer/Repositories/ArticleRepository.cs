@@ -20,33 +20,52 @@ namespace PDKSWebServer.Repositories
                 .FirstOrDefault(u => u.ID == article.Author.ID);
 
             article.Category = _db.Categories
-                .FirstOrDefault(cat => cat.ID == article.Category.ID);
-
-            //if (article.Author == null || article.Category == null)
-            //    throw new ArgumentNullException("Author or category do not exist");
+                .FirstOrDefault(cat => cat.Id == article.Category.Id);
 
             _db.Articles.Add(article);
             var res = _db.SaveChanges();
             return res;
         }
 
-        public Article GetArticle(int id, User.UserRole role)
+        public Article GetArticle(int id, UserRole? role)
         {
             return _db.Articles
-                .Where(a => (int)a.AccessLevel >= (int)role)
                 .Include(article => article.Author)
                 .Include(article => article.Category)
-                .SingleOrDefault(a => a.ID == id);
+                .AsEnumerable()
+                .Where(article => true)
+                    //role == null ? article.AccessLevel == null :
+                    //(int)article.AccessLevel.GetValueOrDefault() >= (int)role.GetValueOrDefault())
+                .SingleOrDefault(article => article.ID == id);
         }
 
-        public IEnumerable<Article> GetArticles(int? categoryId, int? limit,  User.UserRole? role)
+        public IEnumerable<Article> GetArticles(int? categoryId, int? limit,  UserRole? role)
         {
+            bool isNoCategory = (categoryId == null || categoryId == 0);
+
+            limit = limit == null || limit == 0 ? 10 : limit;
+
+            if (isNoCategory)
+                return _db.Articles
+                        .Include(article => article.Author)
+                        .Include(article => article.Category)
+                        .AsEnumerable()
+                        .Where(article => true)
+                            //role == null ? article.AccessLevel == null :
+                            //(int)article.AccessLevel.GetValueOrDefault() >= (int)role.GetValueOrDefault())
+                        .Skip(0)
+                        .Take(limit.Value);
+
             return _db.Articles
                 .Include(article => article.Author)
                 .Include(article => article.Category)
-                .Where(article => article.Category.ID == categoryId || categoryId == 0)
+                .AsEnumerable()
+                .Where(article =>
+                    (isNoCategory ? true : article.Category.Id == categoryId) )
+                    //(role == null ? article.AccessLevel == null :
+                    //(int)article.AccessLevel.GetValueOrDefault() >= (int)role.GetValueOrDefault()))
                 .Skip(0)
-                .Take(limit.GetValueOrDefault() == 0 ? 10 : limit.GetValueOrDefault());
+                .Take(limit.Value);
         }
 
         public void UpdateArticle(Article article)

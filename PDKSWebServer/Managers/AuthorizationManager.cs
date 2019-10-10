@@ -75,8 +75,8 @@ namespace PDKSWebServer.Managers
         {
             var existingToken = GenerateExitingToken(token);
 
-            if (!(existingToken?.GetHashCode() == token?.GetHashCode() && existingToken.User.Role != User.UserRole.Admin))
-                throw new DoesNotHavePermissionsException();
+            //if (!(existingToken?.GetHashCode() == token?.GetHashCode() && existingToken.User.Role != UserRole.Admin))
+            //    throw new DoesNotHavePermissionsException();
 
             if (DateTime.Now >= token.ExpirationTime)
                 throw new AuthorizationIsNeededException();

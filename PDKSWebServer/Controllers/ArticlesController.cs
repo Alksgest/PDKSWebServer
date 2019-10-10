@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -33,42 +35,48 @@ namespace PDKSWebServer.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public ActionResult<IEnumerable<ArticleDto>> GetArticles()
         {
-            //var h = HttpContext.Request.Path;
+            int? category = null;
+            int? limit = null;
+            AuthToken authToken = null;
 
-            //var json = this.Request.Query["token"];
-            //if (!String.IsNullOrEmpty(json))
-            //{
-            //    var token = JsonConvert.DeserializeObject<AuthToken>(json);
-            //}
-            //var role = token == null ? Models.User.UserRole.NotAuthorized : token.User.Role;
+            try
+            {
+                _  = Int32.TryParse(this.HttpContext.Request.Query["category"].ToString(), out Int32 cat);
+                category = cat;
 
-            Int32.TryParse(this.Request.Query["category"].ToString(), out Int32 categoryId);
-            Int32.TryParse(this.Request.Query["limit"].ToString(), out Int32 limit);
+                _ = Int32.TryParse(this.HttpContext.Request.Query["limit"].ToString(), out Int32 lim);
+                limit = lim;
 
-            return Ok(_articlesManager.GetArticles(categoryId, limit));
+                string token = this.HttpContext.Request.Query["authToken"];
+                authToken = JsonConvert.DeserializeObject<AuthToken>(token);
+            }
+            catch { }
+            return Ok(_articlesManager.GetArticles(category, limit, authToken?.User?.Role));
+            //return Ok(_articlesManager.GetArticles(0, 0, null));
         }
 
-        //[HttpGet("category/{categoryId}")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //public ActionResult<IEnumerable<ArticleDto>> GetArticles(int categoryId, AuthToken token = null)
-        //{
-        //    var role = token == null ? Models.User.UserRole.NotAuthorized : token.User.Role;
-        //    return Ok(_articlesManager.GetArticles(categoryId, role));
-        //}
+
 
         [HttpGet("{id}")]
-        public ArticleDto GetArticle(int id, AuthToken token = null)
+        public ArticleDto GetArticle(int id)
         {
-            var role = token == null ? Models.User.UserRole.NotAuthorized : token.User.Role;
-            return _articlesManager.GetArticle(id, role);
+            string token = this.HttpContext.Request.Query["authToken"];
+            var authToken = JsonConvert.DeserializeObject<AuthToken>(token);
+
+            var role = authToken?.User.Role;
+            var res = _articlesManager.GetArticle(id, role);
+            return res;
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [Route("createArticle")]
         public ActionResult<int> PostArticle([FromBody]JsonElement request)
         {
             var req = request.GetRawText();

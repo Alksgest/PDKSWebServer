@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +19,7 @@ namespace PDKSWebServer.Controllers
         [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<AuthToken> Login([FromBody]JsonElement credentials) //
+        public ActionResult<string> Login([FromBody]JsonElement credentials) //
         {
             var val = credentials.GetRawText();
             AccountCredenials cre = JsonConvert.DeserializeObject<AccountCredenials>(val);
@@ -40,9 +36,10 @@ namespace PDKSWebServer.Controllers
 
         [HttpPost("logout")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public ActionResult Logout(AuthToken token)
+        public ActionResult Logout(string authToken)
         {
             //TODO: add some false check?
+            string token = this.HttpContext.Request.Query["authToken"];
             _manager.Logout(token);
 
             return Ok();

@@ -1,11 +1,8 @@
-﻿using PDKSWebServer.Dtos;
+﻿using System.Collections.Generic;
+using PDKSWebServer.Dtos;
 using PDKSWebServer.Mappers;
 using PDKSWebServer.Models;
 using PDKSWebServer.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PDKSWebServer.Managers
 {

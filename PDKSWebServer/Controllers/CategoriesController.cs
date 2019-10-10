@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -43,7 +41,7 @@ namespace PDKSWebServer.Controllers
             var req = request.GetRawText();
             CategoryDto category = JsonConvert.DeserializeObject<CategoryDto>(req);
 
-            return Created("", _manager.AddCategory(category));
+            return Created(new Uri(""), _manager.AddCategory(category));
         }
     }
 }

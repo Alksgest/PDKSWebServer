@@ -1,13 +1,12 @@
-﻿using System;
-using PDKSWebServer.Dtos;
+﻿using PDKSWebServer.Dtos;
 
 namespace PDKSWebServer.Managers
 {
     interface IAuthorizationManager
     {
-        AuthToken Login(AccountCredenials credentials);
-        void Logout(AuthToken token);
+        string Login(AccountCredenials credentials);
+        void Logout(string token);
 
-        AuthToken AllowAction(AuthToken token);
+        string AllowAction(string token);
     }
 }

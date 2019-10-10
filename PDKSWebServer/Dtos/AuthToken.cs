@@ -18,5 +18,6 @@ namespace PDKSWebServer.Dtos
         {
             return HashCode.Combine(User, ExpirationTime) * -23 / 18;
         }
+
     }
 }

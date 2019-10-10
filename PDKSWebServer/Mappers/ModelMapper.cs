@@ -1,10 +1,7 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using AutoMapper;
 using PDKSWebServer.Dtos;
 using PDKSWebServer.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PDKSWebServer.Mappers
 {

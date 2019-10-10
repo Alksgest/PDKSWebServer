@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using PDKSWebServer.Dtos;
 using PDKSWebServer.Exceptions;
 using PDKSWebServer.Mappers;
 using PDKSWebServer.Models;
 using PDKSWebServer.Repositories;
+using PDKSWebServer.Util;
 
 namespace PDKSWebServer.Managers
 {
@@ -15,14 +16,40 @@ namespace PDKSWebServer.Managers
         private readonly IAuthorizedUserRepository _authRepo = new AuthorizedUserRepository();
         private readonly IUserRepository _userRepo = new UserRepository();
 
-        public AuthToken Login(AccountCredenials credentials)
+        public string Login(AccountCredenials credentials)
         {
             var exitinigUser = _authRepo.GetUser(credentials.Username);
 
             if (exitinigUser != null)
                 _authRepo.RemoveUser(exitinigUser);
 
-            return GenerateUserAndReturnNewAuthToken(credentials);
+            return EncodeToken(GenerateUserAndReturnNewAuthToken(credentials));
+        }
+        public void Logout(string token)
+        {
+            var authToken = DecodeToken(token);
+            var exitinigUser = _authRepo.GetUser(authToken.User.Username);
+            _authRepo.RemoveUser(exitinigUser);
+        }
+
+        public string AllowAction(string token)
+        {
+            var authToken = DecodeToken(token);
+            CheckIsTokenValid(authToken);
+
+            return EncodeToken(RenewToken(authToken));
+        }
+
+        private string EncodeToken(AuthToken token)
+        {
+            return JsonConvert.SerializeObject(token, Formatting.Indented,
+                new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver()})
+                .EncodeBase64();
+        }
+
+        private AuthToken DecodeToken(string token)
+        {
+            return JsonConvert.DeserializeObject<AuthToken>(token);
         }
 
         private AuthToken GenerateUserAndReturnNewAuthToken(AccountCredenials credentials)
@@ -42,12 +69,6 @@ namespace PDKSWebServer.Managers
             return GenerateNewToken(credentials); 
         }
 
-        public void Logout(AuthToken token)
-        {
-            var exitinigUser = _authRepo.GetUser(token.User.Username);
-            _authRepo.RemoveUser(exitinigUser);
-        }
-
         private AuthToken RenewToken(AuthToken token)
         {
             token.ExpirationTime = DateTime.Now.AddHours(2);
@@ -62,13 +83,6 @@ namespace PDKSWebServer.Managers
             var user = _authRepo.GetUser(username);
             user.AuthExpirationTime = DateTime.Now.AddHours(2);
             _authRepo.UpdateUser(user);
-        }
-
-        public AuthToken AllowAction(AuthToken token)
-        {
-            CheckIsTokenValid(token);
-
-            return RenewToken(token);
         }
 
         private void CheckIsTokenValid(AuthToken token)

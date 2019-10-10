@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -14,8 +8,6 @@ using PDKSWebServer.Dtos;
 using PDKSWebServer.Exceptions;
 using PDKSWebServer.Managers;
 using PDKSWebServer.Messages;
-using PDKSWebServer.Models;
-using PDKSWebServer.Repositories;
 
 namespace PDKSWebServer.Controllers
 {
@@ -45,7 +37,7 @@ namespace PDKSWebServer.Controllers
 
             try
             {
-                _  = Int32.TryParse(this.HttpContext.Request.Query["category"].ToString(), out Int32 cat);
+                _ = Int32.TryParse(this.HttpContext.Request.Query["category"].ToString(), out Int32 cat);
                 category = cat;
 
                 _ = Int32.TryParse(this.HttpContext.Request.Query["limit"].ToString(), out Int32 lim);
@@ -82,20 +74,23 @@ namespace PDKSWebServer.Controllers
             var req = request.GetRawText();
             CreateArticleRequestMessage msg = JsonConvert.DeserializeObject<CreateArticleRequestMessage>(req);
 
-            try
-            {
-                _authManager.AllowAction(msg.Token);                      
+            //try
+            //{
+            //    _authManager.AllowAction(msg.Token);
 
-                return _articlesManager.AddArticle(msg.Article);
-            }
-            catch(DoesNotHavePermissionsException e)
-            {
-                return BadRequest(e.Message);
-            }
-            catch(AuthorizationIsNeededException e)
-            {
-                return Unauthorized(e.Message);
-            }
+            //    return _articlesManager.AddArticle(msg.Article);
+            //}
+            //catch (DoesNotHavePermissionsException e)
+            //{
+            //    return BadRequest(e.Message);
+            //}
+            //catch (AuthorizationIsNeededException e)
+            //{
+            //    return Unauthorized(e.Message);
+            //}
+
+
+            return _articlesManager.AddArticle(msg.Article);
         }
 
     }

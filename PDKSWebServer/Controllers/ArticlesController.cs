@@ -4,9 +4,8 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using PDKSWebServer.Dtos;
-using PDKSWebServer.Exceptions;
-using PDKSWebServer.Managers;
+using PdksBuisness.Dtos;
+using PdksBuisness.Managers;
 using PDKSWebServer.Messages;
 
 namespace PDKSWebServer.Controllers
@@ -16,7 +15,7 @@ namespace PDKSWebServer.Controllers
     //[EnableCors("AllowAll")]
     public class ArticlesController : ControllerBase
     {
-        private readonly IArticlesManager _articlesManager;
+        private readonly ArticlesManager _articlesManager;
         private readonly IAuthorizationManager _authManager;
 
         public ArticlesController()

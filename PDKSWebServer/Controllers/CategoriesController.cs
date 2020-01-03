@@ -4,8 +4,8 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using PDKSWebServer.Dtos;
-using PDKSWebServer.Managers;
+using PdksBuisness.Dtos;
+using PdksBuisness.Managers;
 
 namespace PDKSWebServer.Controllers
 {
@@ -13,7 +13,7 @@ namespace PDKSWebServer.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly ICategoryManager _manager;
+        private readonly CategoryManager _manager;
 
         public CategoriesController()
         {

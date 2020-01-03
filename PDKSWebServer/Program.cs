@@ -19,14 +19,9 @@ namespace PDKSWebServer
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-            //.ConfigureAppConfiguration((hostingContext, config) =>
-            //{
-            //config.SetBasePath(Directory.GetCurrentDirectory());
-            //config.AddJsonFile("appconfig", optional:false, reloadOnChange: false);
-            //})
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.UseStartup<Startup>();
-            });
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }

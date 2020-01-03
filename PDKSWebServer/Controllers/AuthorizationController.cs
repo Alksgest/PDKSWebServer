@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using PDKSWebServer.Dtos;
-using PDKSWebServer.Exceptions;
-using PDKSWebServer.Managers;
+using PdksBuisness.Dtos;
+using PdksBuisness.Exceptions;
+using PdksBuisness.Managers;
 
 namespace PDKSWebServer.Controllers
 {
@@ -19,7 +19,7 @@ namespace PDKSWebServer.Controllers
         [HttpPost("login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<string> Login([FromBody]JsonElement credentials) //
+        public ActionResult<string> Login([FromBody]JsonElement credentials) 
         {
             var val = credentials.GetRawText();
             AccountCredenials cre = JsonConvert.DeserializeObject<AccountCredenials>(val);

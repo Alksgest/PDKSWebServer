@@ -27,7 +27,7 @@ namespace PdksPersistence.Repositories
             return res;
         }
 
-        public Article GetArticle(int id, UserRole? role)
+        public Article GetArticle(int id)
         {
             return _db.Articles
                 .Include(article => article.Author)
@@ -39,7 +39,7 @@ namespace PdksPersistence.Repositories
                 .SingleOrDefault(article => article.ID == id);
         }
 
-        public IEnumerable<Article> GetArticles(int? categoryId, int? limit,  UserRole? role)
+        public IEnumerable<Article> GetArticles(int? categoryId, int? limit)
         {
             bool isNoCategory = (categoryId == null || categoryId == 0);
 

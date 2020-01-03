@@ -12,16 +12,13 @@ namespace PDKSWebServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[EnableCors("AllowAll")]
     public class ArticlesController : ControllerBase
     {
         private readonly ArticlesManager _articlesManager;
-        private readonly IAuthorizationManager _authManager;
 
         public ArticlesController()
         {
             _articlesManager = new ArticlesManager();
-            _authManager = new AuthorizationManager();
         }
 
         [HttpGet]
@@ -46,7 +43,7 @@ namespace PDKSWebServer.Controllers
                 authToken = JsonConvert.DeserializeObject<AuthToken>(token);
             }
             catch { }
-            return Ok(_articlesManager.GetArticles(category, limit, authToken?.User?.Role));
+            return Ok(_articlesManager.GetArticles(category, limit));
             //return Ok(_articlesManager.GetArticles(0, 0, null));
         }
 
@@ -59,7 +56,7 @@ namespace PDKSWebServer.Controllers
             var authToken = JsonConvert.DeserializeObject<AuthToken>(token);
 
             var role = authToken?.User.Role;
-            var res = _articlesManager.GetArticle(id, role);
+            var res = _articlesManager.GetArticle(id);
             return res;
         }
 

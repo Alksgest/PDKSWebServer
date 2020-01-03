@@ -11,7 +11,6 @@ namespace PDKSWebServer.Controllers
 {
     [Route("api/")]
     [ApiController]
-    [EnableCors("AllowAll")]
     public class AuthorizationController : ControllerBase
     {
         private readonly IAuthorizationManager _manager = new AuthorizationManager();

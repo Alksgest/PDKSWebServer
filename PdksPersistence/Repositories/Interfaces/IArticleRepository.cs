@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace PdksPersistence.Repositories
 {
-    interface IArticleRepository
+    public interface IArticleRepository
     {
-        IEnumerable<Article> GetArticles(int? categoryId, int? limit, UserRole? role);
-        Article GetArticle(int id, UserRole? role);
+        IEnumerable<Article> GetArticles(int? categoryId, int? limit);
+        Article GetArticle(int id);
         int AddArticle(Article article);
         void UpdateArticle(Article article);
     }

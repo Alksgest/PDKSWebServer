@@ -8,9 +8,9 @@ namespace PdksBuisness.Managers
     {
         int AddArticle(ArticleDto article);
 
-        ArticleDto GetArticle(int id, UserRole? role);
+        ArticleDto GetArticle(int id);
 
-        IEnumerable<ArticleDto> GetArticles(int? categoryId, int? limit, UserRole? role);
+        IEnumerable<ArticleDto> GetArticles(int? categoryId, int? limit);
 
         void UpdateArticle(ArticleDto article);
     }

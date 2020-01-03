@@ -8,7 +8,7 @@ namespace PdksBuisness.Managers
 {
     public class ArticlesManager : IArticlesManager
     {
-        private readonly ArticleRepository _repository;
+        private readonly IArticleRepository _repository;
         private readonly ModelMapper _mapper;
 
         public ArticlesManager()
@@ -23,14 +23,14 @@ namespace PdksBuisness.Managers
             return _repository.AddArticle(art);
         }
 
-        public ArticleDto GetArticle(int id, UserRole? role)
+        public ArticleDto GetArticle(int id)
         {
-            return _mapper.Map<Article, ArticleDto>(_repository.GetArticle(id, role));
+            return _mapper.Map<Article, ArticleDto>(_repository.GetArticle(id));
         }
 
-        public IEnumerable<ArticleDto> GetArticles(int? categoryId, int? limit, UserRole? role)
+        public IEnumerable<ArticleDto> GetArticles(int? categoryId, int? limit)
         {
-            return _mapper.MapList<Article, ArticleDto>(_repository.GetArticles(categoryId, limit, role));
+            return _mapper.MapList<Article, ArticleDto>(_repository.GetArticles(categoryId, limit));
         }
 
         public void UpdateArticle(ArticleDto article)

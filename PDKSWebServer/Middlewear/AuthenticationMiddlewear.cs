@@ -1,12 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+
 using Newtonsoft.Json;
+
 using PdksBuisness.Dtos;
+using PdksBuisness.Managers;
 
 namespace PDKSWebServer.Middlewear
 {
@@ -15,24 +17,28 @@ namespace PDKSWebServer.Middlewear
         private readonly RequestDelegate _next;
 
         private readonly ILogger<AuthenticationMiddlewear> _logger;
+        private readonly IAuthorizationManager _manager;
 
         public AuthenticationMiddlewear(RequestDelegate next, ILogger<AuthenticationMiddlewear> logger)
         {
             _next = next;
             _logger = logger;
+            _manager = new AuthorizationManager();
         }
 
         public async Task InvokeAsync(HttpContext context)
         {
-            var token = context.Request.Query["authToken"].ToString();
-            _logger.LogDebug("In Auth middlewear");
+            var token = context.Request.Headers["Authorization"].ToString();
+
             if (token != null)
             {
-                var authToken = JsonConvert.DeserializeObject<AuthToken>(token);
-                Console.WriteLine(authToken);
+                var res = _manager.AllowAction(token);
+                if (res != null)
+                {
+                    context.Response.Headers.Add("Authorization", res.Item1);
+                    await _next.Invoke(context);
+                }
             }
-
-            await _next.Invoke(context);
         }
     }
 

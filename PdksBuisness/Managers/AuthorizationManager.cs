@@ -32,12 +32,15 @@ namespace PdksBuisness.Managers
             _authRepo.RemoveUser(exitinigUser);
         }
 
-        public string AllowAction(string token)
+        public Tuple<string, bool> AllowAction(string token)
         {
-            var authToken = DecodeToken(token);
-            CheckIsTokenValid(authToken);
-
-            return EncodeToken(RenewToken(authToken));
+            if (!String.IsNullOrEmpty(token))
+            {
+                var authToken = DecodeToken(token);
+                CheckIsTokenValid(authToken);
+                return Tuple.Create(EncodeToken(RenewToken(authToken)), true);
+            }
+            return Tuple.Create("", true);
         }
 
         private string EncodeToken(AuthToken token)
@@ -49,7 +52,10 @@ namespace PdksBuisness.Managers
 
         private AuthToken DecodeToken(string token)
         {
-            return JsonConvert.DeserializeObject<AuthToken>(token);
+            if (String.IsNullOrEmpty(token)) return null;
+
+            var encoded = Base64Converter.DecodeBase64(token);
+            return JsonConvert.DeserializeObject<AuthToken>(encoded);
         }
 
         private AuthToken GenerateUserAndReturnNewAuthToken(AccountCredenials credentials)
@@ -87,28 +93,8 @@ namespace PdksBuisness.Managers
 
         private void CheckIsTokenValid(AuthToken token)
         {
-            var existingToken = GenerateExitingToken(token);
-
-            //if (!(existingToken?.GetHashCode() == token?.GetHashCode() && existingToken.User.Role != UserRole.Admin))
-            //    throw new DoesNotHavePermissionsException();
-
-            if (DateTime.Now >= token.ExpirationTime)
+            if (DateTime.Now >= token?.ExpirationTime)
                 throw new AuthorizationIsNeededException();
-        }
-
-        private AuthToken GenerateExitingToken(AuthToken token)
-        {
-            User user = _userRepo.GetUser(token?.User.Username);
-
-            UserDto dto = ModelMapper.GetMapper.Map<User, UserDto>(user);
-
-            AuthToken existingToken = new AuthToken
-            {
-                User = dto,
-                ExpirationTime = token.ExpirationTime,
-            };
-
-            return existingToken;
         }
 
         private AuthToken GenerateNewToken(AccountCredenials credentials)

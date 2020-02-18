@@ -28,7 +28,8 @@ namespace PDKSWebServer
             services
                 .AddScoped<IArticlesManager, ArticlesManager>()
                 .AddScoped<ICategoryManager, CategoryManager>()
-                .AddScoped<IUserManager, UserManager>();
+                .AddScoped<IUserManager, UserManager>()
+                .AddScoped<IAuthorizationManager, AuthorizationManager>();        
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

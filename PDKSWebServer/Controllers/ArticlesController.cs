@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+
 using Newtonsoft.Json;
+
 using PdksBuisness.Dtos;
 using PdksBuisness.Managers;
 using PDKSWebServer.Messages;
@@ -15,10 +19,12 @@ namespace PDKSWebServer.Controllers
     public class ArticlesController : ControllerBase
     {
         private readonly IArticlesManager _articlesManager;
+        private readonly ILogger<ArticlesController> _logger;
 
-        public ArticlesController(IArticlesManager manager)
+        public ArticlesController(IArticlesManager manager, ILogger<ArticlesController> logger)
         {
             _articlesManager = manager;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -27,24 +33,20 @@ namespace PDKSWebServer.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public ActionResult<IEnumerable<ArticleDto>> GetArticles()
         {
-            int? category = null;
-            int? limit = null;
-            AuthToken authToken = null;
-
             try
             {
-                _ = Int32.TryParse(this.HttpContext.Request.Query["category"].ToString(), out Int32 cat);
-                category = cat;
+                var categoryId = this.HttpContext.Request.Query["category"].ToString();
+                var count = this.HttpContext.Request.Query["limit"].ToString();
 
-                _ = Int32.TryParse(this.HttpContext.Request.Query["limit"].ToString(), out Int32 lim);
-                limit = lim;
+                _ = Int32.TryParse(categoryId, out Int32 cat);
+                _ = Int32.TryParse(count, out Int32 lim);
 
-                string token = this.HttpContext.Request.Query["authToken"];
-                authToken = JsonConvert.DeserializeObject<AuthToken>(token);
+                return Ok(_articlesManager.GetArticles(cat, lim));
             }
-            catch { }
-            return Ok(_articlesManager.GetArticles(category, limit));
-            //return Ok(_articlesManager.GetArticles(0, 0, null));
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
 
@@ -52,10 +54,6 @@ namespace PDKSWebServer.Controllers
         [HttpGet("{id}")]
         public ArticleDto GetArticle(int id)
         {
-            string token = this.HttpContext.Request.Query["authToken"];
-            var authToken = JsonConvert.DeserializeObject<AuthToken>(token);
-
-            var role = authToken?.User.Role;
             var res = _articlesManager.GetArticle(id);
             return res;
         }
@@ -69,22 +67,6 @@ namespace PDKSWebServer.Controllers
         {
             var req = request.GetRawText();
             CreateArticleRequestMessage msg = JsonConvert.DeserializeObject<CreateArticleRequestMessage>(req);
-
-            //try
-            //{
-            //    _authManager.AllowAction(msg.Token);
-
-            //    return _articlesManager.AddArticle(msg.Article);
-            //}
-            //catch (DoesNotHavePermissionsException e)
-            //{
-            //    return BadRequest(e.Message);
-            //}
-            //catch (AuthorizationIsNeededException e)
-            //{
-            //    return Unauthorized(e.Message);
-            //}
-
 
             return _articlesManager.AddArticle(msg.Article);
         }

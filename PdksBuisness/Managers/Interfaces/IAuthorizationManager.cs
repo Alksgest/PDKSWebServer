@@ -1,4 +1,6 @@
-﻿using PdksBuisness.Dtos;
+﻿using System;
+
+using PdksBuisness.Dtos;
 
 namespace PdksBuisness.Managers
 {
@@ -7,6 +9,6 @@ namespace PdksBuisness.Managers
         string Login(AccountCredenials credentials);
         void Logout(string token);
 
-        string AllowAction(string token);
+        Tuple<string, bool> AllowAction(string token);
     }
 }

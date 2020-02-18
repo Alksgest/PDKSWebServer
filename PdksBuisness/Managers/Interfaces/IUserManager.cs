@@ -2,7 +2,7 @@
 
 namespace PdksBuisness.Managers
 {
-    interface IUserManager
+    public interface IUserManager
     {
         int AddUser(UserDto user, AccountCredenials credenials);
         UserDto GetUser(string username);

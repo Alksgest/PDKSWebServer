@@ -5,7 +5,7 @@ using PdksBuisness.Dtos;
 
 namespace PdksBuisness.Managers
 {
-    interface ICategoryManager
+    public interface ICategoryManager
     {
         IEnumerable<CategoryDto> GetCategories();
         CategoryDto GetCategory(Int32 id);

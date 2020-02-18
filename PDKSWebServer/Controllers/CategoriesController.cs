@@ -13,11 +13,11 @@ namespace PDKSWebServer.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly CategoryManager _manager;
+        private readonly ICategoryManager _manager;
 
-        public CategoriesController()
+        public CategoriesController(ICategoryManager manager)
         {
-            _manager = new CategoryManager();
+            _manager = manager;
         }
 
         [HttpGet]

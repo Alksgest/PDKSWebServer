@@ -14,11 +14,11 @@ namespace PDKSWebServer.Controllers
     [ApiController]
     public class ArticlesController : ControllerBase
     {
-        private readonly ArticlesManager _articlesManager;
+        private readonly IArticlesManager _articlesManager;
 
-        public ArticlesController()
+        public ArticlesController(IArticlesManager manager)
         {
-            _articlesManager = new ArticlesManager();
+            _articlesManager = manager;
         }
 
         [HttpGet]

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using PdksBuisness.Managers;
 using PDKSWebServer.Middlewear;
 
 namespace PDKSWebServer
@@ -22,7 +23,12 @@ namespace PDKSWebServer
             //        c.AddPolicy("AllowAll", options => 
             //            options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
             services.AddCors();
-            services.AddControllers();;
+            services.AddControllers();
+
+            services
+                .AddScoped<IArticlesManager, ArticlesManager>()
+                .AddScoped<ICategoryManager, CategoryManager>()
+                .AddScoped<IUserManager, UserManager>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

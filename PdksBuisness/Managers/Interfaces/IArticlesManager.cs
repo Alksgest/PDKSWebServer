@@ -4,7 +4,7 @@ using PdksPersistence.Models;
 
 namespace PdksBuisness.Managers
 {
-    interface IArticlesManager
+    public interface IArticlesManager
     {
         int AddArticle(ArticleDto article);
 

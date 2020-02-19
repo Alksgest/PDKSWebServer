@@ -4,11 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PdksPersistence.Models
 {
-    public class Article
+    public class Article : EntityBase
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int? ID { get; set; }
         [Required]
         [MaxLength(40)]
         public string Title { get; set; }

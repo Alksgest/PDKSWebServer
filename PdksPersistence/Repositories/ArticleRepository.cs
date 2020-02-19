@@ -17,7 +17,7 @@ namespace PdksPersistence.Repositories
         public int AddArticle(Article article)
         {
             article.Author = _db.Users
-                .FirstOrDefault(u => u.ID == article.Author.ID);
+                .FirstOrDefault(u => u.Id == article.Author.Id);
 
             article.Category = _db.Categories
                 .FirstOrDefault(cat => cat.Id == article.Category.Id);
@@ -34,7 +34,7 @@ namespace PdksPersistence.Repositories
                 .Include(article => article.Category)
                 .AsEnumerable()
                 .Where(article => (int)article.AccessLevel.Value >= (int)permission)
-                .SingleOrDefault(article => article.ID == id);
+                .SingleOrDefault(article => article.Id == id);
         }
 
         public IEnumerable<Article> GetArticles(int? categoryId, int? limit, UserRole permission)

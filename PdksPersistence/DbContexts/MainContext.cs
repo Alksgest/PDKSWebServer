@@ -12,6 +12,7 @@ namespace PdksPersistence.DbContexts
         public DbSet<AuthorizedUser> AuthorizedUsers { get; set; }
 
         private readonly string _connectionString;
+            
         public MainContext() : base()
         {
             var builder = new ConfigurationBuilder();

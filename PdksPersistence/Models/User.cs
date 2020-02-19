@@ -4,11 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PdksPersistence.Models
 {
-    public partial class User
+    public partial class User : EntityBase
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Int32 ID { get; set; }
         [Required]
         [MaxLength(20)]
         public String Username { get; set; }

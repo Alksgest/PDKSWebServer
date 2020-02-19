@@ -2,11 +2,8 @@
 
 namespace PdksPersistence.Models
 {
-    public class ArticleCategory
+    public class ArticleCategory : EntityBase
     {
-        [Key]
-        //[DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
         public int ArticleId { get; set; }
         public Article Article { get; set; }
         public int CategoryId { get; set; }

@@ -32,15 +32,34 @@ namespace PdksBuisness.Managers
             _authRepo.RemoveUser(exitinigUser);
         }
 
-        public Tuple<string, bool> AllowAction(string token)
+        public Tuple<string, bool> AllowAction(string token, string requestMethod, ref UserRole outRole)
         {
-            if (!String.IsNullOrEmpty(token))
+            var authToken = DecodeToken(token);
+            outRole = authToken != null ? authToken.User.Role.Value : UserRole.NotAuthorized;
+
+            var hasPermission = CheckUserPermission(authToken, requestMethod);
+
+            if (hasPermission) CheckIsTokenValid(authToken);
+
+            var newToken = authToken != null ? EncodeToken(RenewToken(authToken)) : "";
+
+            return Tuple.Create(newToken, hasPermission);
+        }
+
+        private bool CheckUserPermission(AuthToken token, string requestMethod)
+        {
+            var accessLevel = requestMethod switch
             {
-                var authToken = DecodeToken(token);
-                CheckIsTokenValid(authToken);
-                return Tuple.Create(EncodeToken(RenewToken(authToken)), true);
-            }
-            return Tuple.Create("", true);
+                "GET" => UserRole.NotAuthorized,
+                "POST" => UserRole.ThirdDegree,
+                "PUT" => UserRole.ThirdDegree,
+                "DELETE" => UserRole.Admin,
+                _ => UserRole.NotAuthorized,
+            };
+
+            var userAccessLevel = token == null ? (int)UserRole.NotAuthorized : (int)token.User.Role;
+
+            return userAccessLevel >= (int)accessLevel;
         }
 
         private string EncodeToken(AuthToken token)
@@ -55,7 +74,15 @@ namespace PdksBuisness.Managers
             if (String.IsNullOrEmpty(token)) return null;
 
             var encoded = Base64Converter.DecodeBase64(token);
-            return JsonConvert.DeserializeObject<AuthToken>(encoded);
+            try
+            {
+                var res = JsonConvert.DeserializeObject<AuthToken>(encoded);
+                return res;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private AuthToken GenerateUserAndReturnNewAuthToken(AccountCredenials credentials)

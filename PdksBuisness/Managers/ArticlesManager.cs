@@ -23,14 +23,14 @@ namespace PdksBuisness.Managers
             return _repository.AddArticle(art);
         }
 
-        public ArticleDto GetArticle(int id)
+        public ArticleDto GetArticle(int id, UserRole role)
         {
-            return _mapper.Map<Article, ArticleDto>(_repository.GetArticle(id));
+            return _mapper.Map<Article, ArticleDto>(_repository.GetArticle(id, role));
         }
 
-        public IEnumerable<ArticleDto> GetArticles(int? categoryId, int? limit)
+        public IEnumerable<ArticleDto> GetArticles(int? categoryId, int? limit, UserRole role)
         {
-            return _mapper.MapList<Article, ArticleDto>(_repository.GetArticles(categoryId, limit));
+            return _mapper.MapList<Article, ArticleDto>(_repository.GetArticles(categoryId, limit, role));
         }
 
         public void UpdateArticle(ArticleDto article)

@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
+using System.Collections.Generic;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using Newtonsoft.Json;
 
 using PdksBuisness.Dtos;
 using PdksBuisness.Managers;
+using PdksPersistence.Models;
 using PDKSWebServer.Messages;
 
 namespace PDKSWebServer.Controllers
@@ -35,13 +37,17 @@ namespace PDKSWebServer.Controllers
         {
             try
             {
+                GetUserPermissions(out UserRole permissions);
+
                 var categoryId = this.HttpContext.Request.Query["category"].ToString();
                 var count = this.HttpContext.Request.Query["limit"].ToString();
 
                 _ = Int32.TryParse(categoryId, out Int32 cat);
                 _ = Int32.TryParse(count, out Int32 lim);
 
-                return Ok(_articlesManager.GetArticles(cat, lim));
+                var res = _articlesManager.GetArticles(cat, lim, permissions).ToList();
+
+                return Ok(res);
             }
             catch (Exception e)
             {
@@ -54,8 +60,17 @@ namespace PDKSWebServer.Controllers
         [HttpGet("{id}")]
         public ArticleDto GetArticle(int id)
         {
-            var res = _articlesManager.GetArticle(id);
+            GetUserPermissions(out UserRole permissions);
+
+            var res = _articlesManager.GetArticle(id, permissions);
             return res;
+        }
+
+        private void GetUserPermissions(out UserRole permissions)
+        {
+            var str = this.HttpContext.Request.Headers["Permissions"].ToString();
+            _ = Enum.TryParse(str, out UserRole permission);
+            permissions = permission;
         }
 
         [HttpPost]

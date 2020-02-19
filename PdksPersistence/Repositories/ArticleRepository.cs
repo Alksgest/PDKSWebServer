@@ -27,45 +27,58 @@ namespace PdksPersistence.Repositories
             return res;
         }
 
-        public Article GetArticle(int id)
+        public Article GetArticle(int id, UserRole permission)
         {
             return _db.Articles
                 .Include(article => article.Author)
                 .Include(article => article.Category)
                 .AsEnumerable()
-                .Where(article => true)
-                    //role == null ? article.AccessLevel == null :
-                    //(int)article.AccessLevel.GetValueOrDefault() >= (int)role.GetValueOrDefault())
+                .Where(article => (int)article.AccessLevel.Value >= (int)permission)
                 .SingleOrDefault(article => article.ID == id);
         }
 
-        public IEnumerable<Article> GetArticles(int? categoryId, int? limit)
+        public IEnumerable<Article> GetArticles(int? categoryId, int? limit, UserRole permission)
         {
             bool isNoCategory = (categoryId == null || categoryId == 0);
 
             limit = limit == null || limit == 0 ? 10 : limit;
 
+            IEnumerable<Article> result = null;
+
             if (isNoCategory)
-                return _db.Articles
+            {
+                result = _db.Articles
                         .Include(article => article.Author)
                         .Include(article => article.Category)
                         .AsEnumerable()
-                        .Where(article => true)
-                            //role == null ? article.AccessLevel == null :
-                            //(int)article.AccessLevel.GetValueOrDefault() >= (int)role.GetValueOrDefault())
+                        .Where(article => {
+                            var articleAccessLevel = (int)article.AccessLevel.Value;
+                            var userAccessLevel = (int)permission;
+                            return articleAccessLevel <= userAccessLevel;
+                        })
                         .Skip(0)
                         .Take(limit.Value);
+            }
+            else
+            {
+                result = _db.Articles
+                    .Include(article => article.Author)
+                    .Include(article => article.Category)
+                    .AsEnumerable()
+                    .Where(article => {
+                        var articleAccessLevel = (int)article.AccessLevel.Value;
+                        var userAccessLevel = (int)permission;
+                        return articleAccessLevel <= userAccessLevel;
+                    })
+                    .Where(article => {
+                        var id = article.Category.Id;
+                        return id == categoryId;
+                    })
+                    .Skip(0)
+                    .Take(limit.Value);
+            }
 
-            return _db.Articles
-                .Include(article => article.Author)
-                .Include(article => article.Category)
-                .AsEnumerable()
-                .Where(article =>
-                    (isNoCategory ? true : article.Category.Id == categoryId) )
-                    //(role == null ? article.AccessLevel == null :
-                    //(int)article.AccessLevel.GetValueOrDefault() >= (int)role.GetValueOrDefault()))
-                .Skip(0)
-                .Take(limit.Value);
+            return result;
         }
 
         public void UpdateArticle(Article article)

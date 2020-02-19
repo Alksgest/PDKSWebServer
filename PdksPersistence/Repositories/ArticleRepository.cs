@@ -8,28 +8,27 @@ using PdksPersistence.Models;
 
 namespace PdksPersistence.Repositories
 {
-    public class ArticleRepository : IArticleRepository, IDisposable
+    public class ArticleRepository : BaseRepository<Article>, IArticleRepository
     {
-        private bool disposed = false;
-
-        private readonly MainContext _db = new MainContext();
+        //private readonly MainContext _db = new MainContext();
 
         public int AddArticle(Article article)
         {
-            article.Author = _db.Users
-                .FirstOrDefault(u => u.Id == article.Author.Id);
+            //article.Author = _db.Users
+            //    .FirstOrDefault(u => u.Id == article.Author.Id);
 
-            article.Category = _db.Categories
-                .FirstOrDefault(cat => cat.Id == article.Category.Id);
+            //article.Category = _db.Categories
+            //    .FirstOrDefault(cat => cat.Id == article.Category.Id);
 
-            _db.Articles.Add(article);
-            var res = _db.SaveChanges();
-            return res;
+            //_db.Articles.Add(article);
+            //var res = _db.SaveChanges();
+
+            return Add(article);
         }
 
         public Article GetArticle(int id, UserRole permission)
         {
-            return _db.Articles
+            return GetAll()
                 .Include(article => article.Author)
                 .Include(article => article.Category)
                 .AsEnumerable()
@@ -47,7 +46,7 @@ namespace PdksPersistence.Repositories
 
             if (isNoCategory)
             {
-                result = _db.Articles
+                result = GetAll()
                         .Include(article => article.Author)
                         .Include(article => article.Category)
                         .AsEnumerable()
@@ -61,7 +60,7 @@ namespace PdksPersistence.Repositories
             }
             else
             {
-                result = _db.Articles
+                result = GetAll()
                     .Include(article => article.Author)
                     .Include(article => article.Category)
                     .AsEnumerable()
@@ -84,25 +83,6 @@ namespace PdksPersistence.Repositories
         public void UpdateArticle(Article article)
         {
 
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposed)
-                return;
-
-            if (disposing)
-            {
-                _db.Dispose();
-            }
-
-            disposed = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

@@ -1,5 +1,6 @@
-﻿using PdksPersistence.Models;
-using System.Collections.Generic;
+﻿using Microsoft.EntityFrameworkCore;
+
+using PdksPersistence.Models;
 
 namespace PdksPersistence.Repositories
 {
@@ -9,6 +10,6 @@ namespace PdksPersistence.Repositories
         int Delete(T obj);
         int Add(T obj);
         T GetOne(int id);
-        IEnumerable<T> GetAll();
+        DbSet<T> GetAll();
     }
 }

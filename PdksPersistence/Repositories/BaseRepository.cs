@@ -10,8 +10,11 @@ using PdksPersistence.Models;
 
 namespace PdksPersistence.Repositories
 {
-    internal class BaseRepository<T> : IRepository<T> where T : EntityBase
+    public class BaseRepository<T> : IDisposable, IRepository<T> where T : EntityBase
     {
+
+        private bool disposed = false;
+
         private readonly MainContext _context;
         private readonly DbSet<T> _table;
 
@@ -32,7 +35,7 @@ namespace PdksPersistence.Repositories
             return SaveChanges();
         }
 
-        public IEnumerable<T> GetAll()
+        public DbSet<T> GetAll()
         {
             return _table.AsEnumerable();
         }
@@ -81,4 +84,24 @@ namespace PdksPersistence.Repositories
                 throw;
             }
         }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                _db.Dispose();
+            }
+
+            disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+    }
 }

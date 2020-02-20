@@ -10,20 +10,20 @@ namespace PdksPersistence.Repositories
 {
     public class ArticleRepository : BaseRepository<Article>, IArticleRepository
     {
-        //private readonly MainContext _db = new MainContext();
+        private readonly MainContext _db = new MainContext();
 
         public int AddArticle(Article article)
         {
-            //article.Author = _db.Users
-            //    .FirstOrDefault(u => u.Id == article.Author.Id);
+            article.Author = _db.Users
+                .FirstOrDefault(u => u.Id == article.Author.Id);
 
-            //article.Category = _db.Categories
-            //    .FirstOrDefault(cat => cat.Id == article.Category.Id);
+            article.Category = _db.Categories
+                .FirstOrDefault(cat => cat.Id == article.Category.Id);
 
-            //_db.Articles.Add(article);
-            //var res = _db.SaveChanges();
+            _db.Articles.Add(article);
+            return _db.SaveChanges();
 
-            return Add(article);
+            //return Add(article);
         }
 
         public Article GetArticle(int id, UserRole permission)

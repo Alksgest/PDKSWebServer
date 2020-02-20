@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PdksPersistence.Repositories
 {
-    interface ICategoryRepository
+    public interface ICategoryRepository
     {
         IEnumerable<Category> GetCategories();
         Category GetCategory(int id);

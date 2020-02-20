@@ -29,24 +29,33 @@ namespace PDKSWebServer.Middlewear
             var token = context.Request.Headers["Authorization"].ToString();
 
             var request = context.Request;
+            var requestMethod = request.Method;
 
             if (token != null)
             {
                 UserRole role = UserRole.NotAuthorized;
                 try
                 {
-                    var res = _manager.AllowAction(token, request.Method, ref role);
+                    var res = _manager.AllowAction(token, requestMethod, ref role);
                     if (res.Item2)
                     {
                         context.Request.Headers.Add("Permissions", role.ToString());
-                        context.Response.Headers.Add("Authorization", res.Item1);
+                        context.Request.Headers.Add("Authorized", "true");
+                        context.Response.Headers.Add("Auth-Token", res.Item1);
                         await _next.Invoke(context);
                     }
                 }
-                catch(AuthorizationIsNeededException e)
+                catch(AuthorizationIsNeededException)
                 {
+                    context.Request.Headers.Add("Authorized", "false");
                     await _next.Invoke(context);
                 }
+            }
+            else
+            {
+                context.Request.Headers.Add("Authorized", "false");
+                context.Request.Headers.Add("Permissions", UserRole.NotAuthorized.ToString());
+                await _next.Invoke(context);
             }
         }
     }

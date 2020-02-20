@@ -37,7 +37,7 @@ namespace PdksPersistence.Repositories
 
         public DbSet<T> GetAll()
         {
-            return _table.AsEnumerable();
+            return _table;
         }
 
         public T GetOne(int id)
@@ -57,20 +57,20 @@ namespace PdksPersistence.Repositories
             {
                 return _context.SaveChanges();
             }
-            catch (DbUpdateConcurrencyException ex)
+            catch (DbUpdateConcurrencyException)
             {
                 // Генерируется, когда возникла ошибка, связанная с параллелизмом.
                 // Пока что просто сгенерировать исключение повторно,
                 throw;
             }
-            catch (RetryLimitExceededException ex)
+            catch (RetryLimitExceededException)
             {
                 // Генерируется, когда достигнуто максимальное количество попыток.
                 // Дополнительные детали можно найти во внутреннем исключении (исключениях) .
                 // Пока что просто сгенерировать исключение повторно.
                 throw;
             }
-            catch (DbUpdateException ex)
+            catch (DbUpdateException)
             {
                 // Генерируется, когда обновление базы данных потерпело неудачу.
                 // Дополнительные детали и затронутые объекты можно
@@ -78,7 +78,7 @@ namespace PdksPersistence.Repositories
                 // Пока что просто сгенерировать исключение повторно,
                 throw;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Возникло какое-то другое исключение, которое должно быть обработано,
                 throw;
@@ -92,7 +92,7 @@ namespace PdksPersistence.Repositories
 
             if (disposing)
             {
-                _db.Dispose();
+                _context.Dispose();
             }
 
             disposed = true;

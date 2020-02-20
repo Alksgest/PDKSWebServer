@@ -6,7 +6,7 @@ namespace PdksBuisness.Managers
 {
     public interface IArticlesManager
     {
-        int AddArticle(ArticleDto article);
+        int AddArticle(ArticleDto article, UserRole accessLevel);
 
         ArticleDto GetArticle(int id, UserRole permission);
 

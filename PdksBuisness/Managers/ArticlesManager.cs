@@ -19,9 +19,10 @@ namespace PdksBuisness.Managers
             _mapper = ModelMapper.GetMapper;
         }
 
-        public int AddArticle(ArticleDto article)
+        public int AddArticle(ArticleDto article, UserRole accessLevel)
         {
             Article art = _mapper.Map<ArticleDto, Article>(article);
+            art.AccessLevel = accessLevel;
 
             return _articleRepository.AddArticle(art);
         }

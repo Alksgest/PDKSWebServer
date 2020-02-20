@@ -42,7 +42,7 @@ namespace PDKSWebServer.Controllers
                 _ = Int32.TryParse(categoryId, out Int32 cat);
                 _ = Int32.TryParse(count, out Int32 lim);
 
-                var res = _articlesManager.GetArticles(cat, lim, permissions).ToList();
+                var res = _articlesManager.GetArticles(cat, lim, permissions);
 
                 return Ok(res);
             }
@@ -75,7 +75,11 @@ namespace PDKSWebServer.Controllers
             if (!authorized) return Unauthorized();
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            return Ok(_articlesManager.AddArticle(article));
+            var level = this.HttpContext.Request.Headers["Access-Level"].ToString();
+
+            _ = Enum.TryParse<UserRole>(level, out UserRole accessLevel);
+
+            return Ok(_articlesManager.AddArticle(article, accessLevel));
         }
 
         private void GetUserPermissions(out UserRole permissions)

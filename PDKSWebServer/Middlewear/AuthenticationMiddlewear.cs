@@ -26,7 +26,7 @@ namespace PDKSWebServer.Middlewear
 
         public async Task InvokeAsync(HttpContext context)
         {
-            var token = context.Request.Headers["Authorization"].ToString();
+            var token = context.Request.Headers["Auth-Token"].ToString();
 
             var request = context.Request;
             var requestMethod = request.Method;

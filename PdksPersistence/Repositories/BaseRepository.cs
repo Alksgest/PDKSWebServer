@@ -15,7 +15,7 @@ namespace PdksPersistence.Repositories
 
         private bool disposed = false;
 
-        private readonly MainContext _context;
+        protected readonly MainContext _context;
         private readonly DbSet<T> _table;
 
         public BaseRepository()
